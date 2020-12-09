@@ -1,1 +1,15 @@
-s1.algo
+"calcule somme"
+INIT i TO 0
+INIT S TO 0
+INIT N To 0
+ 
+SEQUENCE calcule
+    PRINT DONNER N 
+    READ (N)
+    FOR i from 0 TO N
+        SET S TO S+i 
+    END FOR  
+    PRINT 'LA somme est ${S}'
+
+
+ END SEQUENCE 
