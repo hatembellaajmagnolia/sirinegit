@@ -1,1 +1,37 @@
-elevators
+INIT nbrecolonne TO 1
+INIT nbre_elevators TO 2
+INIT nbrefloor To 10
+INIT floorlist[]
+SET Time _out = 5s
+
+                     "request elevator"
+SEQUENCE {requested_elevator , destination}
+    if button is pressed then
+       call  elevator and open the door 
+    else 
+        keep the door closed 
+    end if 
+END SEQUENCE
+  
+                      "find the best elevator"
+SEQUENCE {elevators_direction,destination,floor_current}
+        SET BestElevator = call find elevator with the short distance and destination
+        SET Best_distance =call the short distance 
+        SET Best_distance= returns the absolute value(floor - Elevator Floor)
+    while 
+       elevator is equal to the caller_destination
+    repeat 
+
+END SEQUENCE
+                    " inside elevator and resquest floor"
+SEQUENCE {floor requested , destination}
+       if button inside is pressed and Time_out >=5s then 
+           close the door and go to destination_requested
+        else 
+            keep door open and respect Time
+       end if
+END SEQUENCE
+
+       
+                            
+       
