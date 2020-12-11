@@ -1,37 +1,25 @@
-INIT nbrecolonne TO 1
-INIT nbre_elevators TO 2
-INIT nbrefloor To 10
-INIT floorlist[]
-SET Time _out = 5s
+                         
+Instantiate B[10] as array of button 
+DEFINE Elevator_Button  
+    INIT ID_Button  : idButton        //button number
+    INIT ID_Elevator  : idelevator       //elevator 1 or 2
+    INIT Status : Status            // desactivate or activate
+    SEQUENCE setStatus with status      // change statuts
+        SET Status To status 
+    SEQUENCE getStatus with status      // get statuts
+        RETURN Status 
 
-                     "request elevator"
-SEQUENCE {requested_elevator , destination}
-    if button is pressed then
-       call  elevator and open the door 
-    else 
-        keep the door closed 
-    end if 
-END SEQUENCE
-  
-                      "find the best elevator"
-SEQUENCE {elevators_direction,destination,floor_current}
-        SET BestElevator = call find elevator with the short distance and destination
-        SET Best_distance =call the short distance 
-        SET Best_distance= returns the absolute value(floor - Elevator Floor)
-    while 
-       elevator is equal to the caller_destination
-    repeat 
-
-END SEQUENCE
-                    " inside elevator and resquest floor"
-SEQUENCE {floor requested , destination}
-       if button inside is pressed and Time_out >=5s then 
-           close the door and go to destination_requested
-        else 
-            keep door open and respect Time
-       end if
-END SEQUENCE
-
-       
-                            
-       
+DEFINE ELEVATOR 
+    INIT B[
+        Instantiate Elevator_Button WITH 1,idelevator,desactivate,   //instantiate of the first Button 
+        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of second buuton
+        Instantiate Elevator_Button WITH 3,idelevator,desactivate   //instantiate of third buuton
+        Instantiate Elevator_Button WITH 4,idelevator,desactivate   //instantiate of four buuton
+        Instantiate Elevator_Button WITH 5,idelevator,desactivate   //instantiate of five buuton
+        Instantiate Elevator_Button WITH 6,idelevator,desactivate   //instantiate of six buuton
+        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of seven buuton
+        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of eight buuton
+        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of nine buuton
+        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of ten buuton
+    ] 
+    INIT 
