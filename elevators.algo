@@ -1,16 +1,52 @@
+//************************************
+// DEFINE CONSTANTS VALUES 
+//************************************
+SET WeigthThreshold     :   500     //  Measure Unit : KG / Max wight that elevator can support 
+SET MaxCapacity         :   10      //  Measure Unit : Person / Max person that elevator can contain
+
+//************************************
+// Elevator_Button class
+//************************************
 
 DEFINE Elevator_Button  
-    INIT ID_Button  : idButton        //button number
-    INIT ID_Elevator  : idelevator       //elevator 1 or 2
-    INIT Status : Status            // desactivate or activate
-    SEQUENCE setStatus with status      // change statuts
+    
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT ID_Button      : idButton        //button number
+    INIT ID_Elevator    : idelevator      //elevator 1 or 2
+    INIT Status         : Status          // desactivate or activate
+
+    //************************************
+    // change statuts : set status value
+    //************************************
+
+    SEQUENCE setStatus with status      
         SET Status To status 
-    SEQUENCE getStatus with status      // get statuts
+    END SEQUENCE
+
+    //************************************
+    // GET statuts : return status value
+    //************************************
+
+    SEQUENCE getStatus with status     
         RETURN Status 
+
 END DEFINE
 
+
+//************************************
+// Elevator class
+//************************************
+
 DEFINE ELEVATOR 
-    INIT B[
+
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT B[         //Array of Button inside the elevator
         Instantiate Elevator_Button WITH 1,idelevator,desactivate   //instantiate of the first Button 
         Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of second buuton
         Instantiate Elevator_Button WITH 3,idelevator,desactivate   //instantiate of third buuton
@@ -20,19 +56,75 @@ DEFINE ELEVATOR
         Instantiate Elevator_Button WITH 7,idelevator,desactivate   //instantiate of seven buuton
         Instantiate Elevator_Button WITH 8,idelevator,desactivate   //instantiate of eight buton
         Instantiate Elevator_Button WITH 9,idelevator,desactivate   //instantiate of nine buuton
-        Instantiate Elevator_Button WITH 10,idelevator,desactivate   //instantiate of ten buuton
+        Instantiate Elevator_Button WITH 10,idelevator,desactivate  //instantiate of ten buuton
     ] 
-    INIT ID_direction : 'null'
-    INIT DoorStatus :'closed'
-    INIT DoorObstrcution : 'false'
-    INIT requestList : []
-    INIT OverWeigth :'false'
+    INIT Direction          : 'NULL'        //Possible values 'UP'/'Down'/'NULL'
+    INIT DoorStatus         : 'CLOSED'      //Possible values 'CLOSED'/'OPEN'
+    INIT DoorObstrcution    : 'FALSE'       //Possible values 'FALSE'/'TRUE'
+    INIT requestList        : []            //List of all request made by callers inside and outside the elevator
+    INIT OverWeigth         : 'FALSE'       // Value defined with respect to a threshold value - Possible values 'FALSE'/'TRUE'
+    INIT NumberOfPerson     :   0           // Number of persons in the elevator 
+    INIT Weigth             :   0           // The weigth of persons inside the elevator 
+    INIT Status             :   status      //Possible values 'MOVING'/'STOPPED'/'IDLE'
+
+
+    //************************************
+    // Methods declaration
+    //************************************
+
+    //**************************************************
+    // move : move the elevator to reach specific floor
+    //**************************************************
+
+    SEQUENCE move with floorDestination      
+        MOVE ELEVATOR TO floorDestination 
+    END SEQUENCE
+
+    //**************************************************
+    // openDoor : open the door of the elevator 
+    //**************************************************
+     
+    SEQUENCE openDoors with elevator AND floor AND waitingTime
+        IF elevator floor IS EQUAL TO floor THEN
+        SET timer TO 0 seconds
+            WHILE timer < waitingTime OR OverWeigth  IS "TRUE" OR DoorObstrcution  IS "TRUE"
+                open elevatorDoor OF elevator
+                SET elevatorDoor OF elevator TO "OPENED"
+                open floorDoor OF floorDoorsList WITH EQUAL floor
+                SET floorDoor  OF floorDoorsList WITH EQUAL floor TO "OPENED"
+            ENDWHILE
+            CALL closeDoors
+        ENDIF
+    ENDSEQUENCE 
+
+    END SEQUENCE
+
+
+
+openDoor
+
+closeDoor
+
+All getter and setter 
+
+
 END DEFINE
 
+
+
+//************************************
+// Outside_Button class
+//************************************
+
 DEFINE Outside_Button
-    INIT  ID_direction: id_direction
-    INIT CURRENT_Floor :callerposition
-    INIT Status : Status
+
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT Direction          :   'NULL'              //Possible values 'UP'/'Down'/'NULL'
+    INIT CURRENT_Floor      :   callerposition      //floor number
+    INIT Status             :   Status          // desactivate or activate
     INIT Btn[
         Instantiate Outside_Button WITH Down,10, desactivate
         Instantiate Outside_Button WITH down or up,9, desactivate                //instantiate button outside (up or down)
@@ -79,7 +171,7 @@ SEQUENCE findElevator USING CURRENT_Floor AND Direction AND ID_Elevator OF Shaft
 
         RETURN bestElevator 
     ENDSEQUENCE
-    
+
 SEQUENCE findNearestElevator USING ID_Elevator
         SET bestElevator TO first elevator (elevator1) OF ID_Elevator     //lets take the first element of the array and compare it to each elevator1 of the array  
         SET bestGap = |floor OF bestElevator - CURRENT_Floor|
