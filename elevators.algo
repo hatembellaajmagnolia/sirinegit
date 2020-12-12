@@ -53,4 +53,29 @@ call move elevator
 
  
 SEQUENCE CallElevator (id_direction,CURRENT_Floor)
-    call setButtonST
+    call setButtonS
+ // The best option is the nearest and already moving elevator that has the same direction that the current direction
+    // Verify if the request is on the elevators way, otherwise the elevator will just continue its way ignoring this call
+    // If there is no elevators moving at the same direction as the current direction, the nearest idle elevator is selected
+
+SEQUENCE findElevator USING CURRENT_Floor AND Direction AND ID_Elevator OF Shaft
+        SET ActiveID_Elevator TO EMPTY
+        SET IdleID_Elevator TO EMPTY
+
+        FOR EACH elevator1 IN ID_Elevator
+            IF (elevator1 IS NOT "IDLE" AND elevator1 status IS EQUAL TO currentDirection) THEN  //if the elevator is active and has the same direction
+                IF (elevator1 status IS "UP" AND elevator1 floor IS < CURRENT_Floor OR elevator1 status IS "DOWN" AND elevator1 floor IS > CURRENT_Floor) THEN
+                    ADD elevator1 TO ActiveID_Elevator
+                ENDIF
+            ELSE 
+                ADD elevator1 TO IdleID_Elevator
+            ENDIF
+        ENDFOR
+
+        IF (ActiveID_Elevator IS not EMPTY) THEN
+            CALL findNearestElevator USING CURRENT_Floor AND ActiveID_Elevator
+        ELSE 
+            CALL findNearestElevator USING CURRENT_Floor AND IdleID_Elevator         
+
+        RETURN bestElevator 
+    ENDSEQUENCE
