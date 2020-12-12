@@ -1,5 +1,4 @@
-                         
-Instantiate B[10] as array of button 
+
 DEFINE Elevator_Button  
     INIT ID_Button  : idButton        //button number
     INIT ID_Elevator  : idelevator       //elevator 1 or 2
@@ -8,18 +7,50 @@ DEFINE Elevator_Button
         SET Status To status 
     SEQUENCE getStatus with status      // get statuts
         RETURN Status 
+END DEFINE
 
 DEFINE ELEVATOR 
     INIT B[
-        Instantiate Elevator_Button WITH 1,idelevator,desactivate,   //instantiate of the first Button 
+        Instantiate Elevator_Button WITH 1,idelevator,desactivate   //instantiate of the first Button 
         Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of second buuton
         Instantiate Elevator_Button WITH 3,idelevator,desactivate   //instantiate of third buuton
         Instantiate Elevator_Button WITH 4,idelevator,desactivate   //instantiate of four buuton
         Instantiate Elevator_Button WITH 5,idelevator,desactivate   //instantiate of five buuton
         Instantiate Elevator_Button WITH 6,idelevator,desactivate   //instantiate of six buuton
-        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of seven buuton
-        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of eight buuton
-        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of nine buuton
-        Instantiate Elevator_Button WITH 2,idelevator,desactivate   //instantiate of ten buuton
+        Instantiate Elevator_Button WITH 7,idelevator,desactivate   //instantiate of seven buuton
+        Instantiate Elevator_Button WITH 8,idelevator,desactivate   //instantiate of eight buton
+        Instantiate Elevator_Button WITH 9,idelevator,desactivate   //instantiate of nine buuton
+        Instantiate Elevator_Button WITH 10,idelevator,desactivate   //instantiate of ten buuton
     ] 
-    INIT 
+    INIT ID_direction : 'null'
+    INIT DoorStatus :'closed'
+    INIT DoorObstrcution : 'false'
+    INIT requestList : []
+    INIT OverWeigth :'false'
+END DEFINE
+
+DEFINE Outside_Button
+    INIT  ID_direction: id_direction
+    INIT CURRENT_Floor :callerposition
+    INIT Status : Status
+    INIT Btn[
+        Instantiate Outside_Button WITH Down,10, desactivate
+        Instantiate Outside_Button WITH down or up,9, desactivate                //instantiate button outside (up or down)
+        Instantiate Outside_Button WITH down or up,8, desactivate
+        Instantiate Outside_Button WITH down or up,7, desactivate
+        Instantiate Outside_Button WITH down or up,6, desactivate
+        Instantiate Outside_Button WITH down or up,5, desactivate
+        Instantiate Outside_Button WITH down or up,4, desactivate
+        Instantiate Outside_Button WITH down or up,3, desactivate
+        Instantiate Outside_Button WITH down or up,2, desactivate
+        Instantiate Outside_Button WITH down or up,1, desactivate
+    ]
+END DEFINE
+call elevator
+call find best elevator
+call operate elevator
+call move elevator
+
+ 
+SEQUENCE CallElevator (id_direction,CURRENT_Floor)
+    call setButtonST
