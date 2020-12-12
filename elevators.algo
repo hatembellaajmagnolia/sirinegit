@@ -79,3 +79,16 @@ SEQUENCE findElevator USING CURRENT_Floor AND Direction AND ID_Elevator OF Shaft
 
         RETURN bestElevator 
     ENDSEQUENCE
+    
+SEQUENCE findNearestElevator USING ID_Elevator
+        SET bestElevator TO first elevator (elevator1) OF ID_Elevator     //lets take the first element of the array and compare it to each elevator1 of the array  
+        SET bestGap = |floor OF bestElevator - CURRENT_Floor|
+        FOR EACH elevator1 IN ID_Elevator 
+            IF (|floor OF elevator1 - CURRENT_Floor| <bestGap) THEN
+                SET bestElevator TO elevator1           
+            ENDIF
+        ENDFOR
+        RETURN bestElevator 
+    ENDSEQUENCE
+
+ENDDEFINE
