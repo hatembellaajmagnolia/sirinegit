@@ -1,8 +1,17 @@
+
 //************************************
 // DEFINE CONSTANTS VALUES 
 //************************************
 SET WeigthThreshold     :   500     //  Measure Unit : KG / Max wight that elevator can support 
 SET MaxCapacity         :   10      //  Measure Unit : Person / Max person that elevator can contain
+
+
+//************************************
+// DEFINE GLOBAL PARAMETERS 
+//************************************
+INIT Emergency           :   FALSE   //  If Emergency all elevators should be evacuated  
+
+
 
 //************************************
 // Elevator_Button class
@@ -58,17 +67,21 @@ DEFINE ELEVATOR
         Instantiate Elevator_Button WITH 9,idelevator,desactivate   //instantiate of nine buuton
         Instantiate Elevator_Button WITH 10,idelevator,desactivate  //instantiate of ten buuton
     ] 
-    INIT Direction          : 'NULL'        //Possible values 'UP'/'Down'/'NULL'
+    INIT ID_Elevator    : idelevator        //elevator 1 or 2
+    INIT Direction          : "NULL"        //Possible values 'UP'/'Down'/'NULL'
     INIT DoorStatus         : 'CLOSED'      //Possible values 'CLOSED'/'OPEN'
     INIT DoorObstrcution    : 'FALSE'       //Possible values 'FALSE'/'TRUE'
     INIT requestList        : []            //List of all request made by callers inside and outside the elevator
-    INIT OverWeigth         : 'FALSE'       // Value defined with respect to a threshold value - Possible values 'FALSE'/'TRUE'
     INIT NumberOfPerson     :   0           // Number of persons in the elevator 
     INIT Weigth             :   0           // The weigth of persons inside the elevator 
     INIT Status             :   status      //Possible values 'MOVING'/'STOPPED'/'IDLE'
+    INIT CURRENT_Floor      :   0           //0 is default value
+
 
 
     //************************************
+
+
     // Methods declaration
     //************************************
 
@@ -76,37 +89,101 @@ DEFINE ELEVATOR
     // move : move the elevator to reach specific floor
     //**************************************************
 
-    SEQUENCE move with floorDestination      
-        MOVE ELEVATOR TO floorDestination 
+    SEQUENCE move with floorNumber
+        if CURRENT_Floor = floorNumber THEN    
+            CALL setStatus with 'STOPPED'
+        else if CURRENT_Floor < floorNumber THEN    
+            MOVE UP to floorNumber
+            CALL setStatus with 'MOVING'
+        else 
+            MOVE DOWN to floorNumber
+            CALL setStatus with 'MOVING'
+        END IF 
+        CALL setStatus with 'STOPPED'
+        CURRENT_Floor = floorNumber 
     END SEQUENCE
 
+
     //**************************************************
-    // openDoor : open the door of the elevator 
+    // openDoor : open the door of the elevator  
     //**************************************************
      
-    SEQUENCE openDoors with elevator AND floor AND waitingTime
-        IF elevator floor IS EQUAL TO floor THEN
-        SET timer TO 0 seconds
-            WHILE timer < waitingTime OR OverWeigth  IS "TRUE" OR DoorObstrcution  IS "TRUE"
-                open elevatorDoor OF elevator
-                SET elevatorDoor OF elevator TO "OPENED"
-                open floorDoor OF floorDoorsList WITH EQUAL floor
-                SET floorDoor  OF floorDoorsList WITH EQUAL floor TO "OPENED"
-            ENDWHILE
-            CALL closeDoors
-        ENDIF
+    SEQUENCE openDoor  
+        OPEN DOOR               //Execute system command - Electrical 
+        setDoorStatus("OPEN")
     ENDSEQUENCE 
 
-    END SEQUENCE
+    //**************************************************
+    // closeDoor : close the door of the elevator  
+    //**************************************************
+     
+    SEQUENCE closeDoor 
+        WHILE (Weight == WeigthThreshold) OR (NumberOfPerson== MaxCapacity) OR DoorObstrcution 
+            CALL openDoor
+            BIP SIGNAL
+        END WHILE
+        CLOSE DOOR                
+        setDoorStatus("CLOSED")
+    ENDSEQUENCE 
 
 
+    //**************************************************
+    // addToRequestList : add floor to the request list 
+    //**************************************************
+     
+    SEQUENCE addToRequestList with floorNumber 
+        ADD floorNumber To requestList
 
-openDoor
+    ENDSEQUENCE 
 
-closeDoor
+    //**************************************************
+    // removeFromRequestList : remove floor from the request list 
+    //**************************************************
+     
+    SEQUENCE removeFromRequestList with floorNumber 
+         remove floorNumber from requestList
+    ENDSEQUENCE 
 
-All getter and setter 
+    //**************************************************
+    // sortRequestList : sort the request list 
+    //**************************************************
+     
+    SEQUENCE sortRequestList  
+        IF Elevator Direction IS GOING UP THEN
+        SORT requestList FROM Lower Levels TO Upper levels
+        ELSE IF Elevator Direction IS GOING DOWN THEN
+        SORT requestList FROM Upper Levels TO Lower levels
+        END IF
+    SET requestList TO sortRequestList 
+  return  sortRequestList 
 
+END SEQUENCE
+ 
+    ENDSEQUENCE 
+
+    //**************************************************
+    // mainElevator : open the door of the elevator  
+    // Manage request list 
+    //**************************************************
+     
+    SEQUENCE mainElevator *
+        while requestList is not EMPTY and (not Emergency) 
+            Call sortRequestList //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            call move with requestList[0] // requestList[0] is the first floor which should be reached it can be 10, 7,....
+            call openDoor
+            call removeFromRequestList with requestList[0]
+        END WHILE
+    ENDSEQUENCE
+
+    //**************************************************
+    // startElevator : Thez first time while the elevator start   
+    // Manage request list 
+    //**************************************************
+     
+    SEQUENCE startElevator with floorNumber
+        call move with floorNumber
+        call mainElevator
+    ENDSEQUENCE
 
 END DEFINE
 
