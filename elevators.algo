@@ -13,9 +13,9 @@ INIT Emergency           :   FALSE   //  If Emergency all elevators should be ev
 
 
 
-//************************************
+//************************************************************************************************************
 // Elevator_Button class
-//************************************
+//************************************************************************************************************
 
 DEFINE Elevator_Button  
     
@@ -45,9 +45,9 @@ DEFINE Elevator_Button
 END DEFINE
 
 
-//************************************
+//************************************************************************************************************
 // Elevator class
-//************************************
+//************************************************************************************************************
 
 DEFINE ELEVATOR 
 
@@ -67,14 +67,14 @@ DEFINE ELEVATOR
         Instantiate Elevator_Button WITH 9,idelevator,desactivate   //instantiate of nine buuton
         Instantiate Elevator_Button WITH 10,idelevator,desactivate  //instantiate of ten buuton
     ] 
-    INIT ID_Elevator    : idelevator        //elevator 1 or 2
+    INIT ID_Elevator        : idelevator        //elevator 1 or 2
     INIT Direction          : "NULL"        //Possible values 'UP'/'Down'/'NULL'
     INIT DoorStatus         : 'CLOSED'      //Possible values 'CLOSED'/'OPEN'
     INIT DoorObstrcution    : 'FALSE'       //Possible values 'FALSE'/'TRUE'
     INIT requestList        : []            //List of all request made by callers inside and outside the elevator
     INIT NumberOfPerson     :   0           // Number of persons in the elevator 
     INIT Weigth             :   0           // The weigth of persons inside the elevator 
-    INIT Status             :   status      //Possible values 'MOVING'/'STOPPED'/'IDLE'
+    INIT Status             :   'IDLE'      //Possible values 'MOVING'/'STOPPED'/'IDLE'
     INIT CURRENT_Floor      :   0           //0 is default value
 
 
@@ -150,14 +150,40 @@ DEFINE ELEVATOR
      
     SEQUENCE sortRequestList  
         IF Elevator Direction IS GOING UP THEN
-        SORT requestList FROM Lower Levels TO Upper levels
-        ELSE IF Elevator Direction IS GOING DOWN THEN
-        SORT requestList FROM Upper Levels TO Lower levels
-        END IF
-    SET requestList TO sortRequestList 
-  return  sortRequestList 
+            //SORT requestList FROM Lower Levels TO Upper levels
+            p = 0
+            REPEAT
+                permut = FALSE
+                FOR i FROM 1 TO n-1-p 
+                    IF requestList[i] > requestList[i+1] THEN
+                        TEMP = requestList[i] 
+                        requestList[i] = requestList[i+1]
+                        requestList[i+1] = TEMP
+                        permut = TRUE 
+                    END IF
+                END FOR
+                p= p + 1
+            UNTIL permut = TRUE
 
-END SEQUENCE
+        ELSE IF Elevator Direction IS GOING DOWN THEN
+            //SORT requestList FROM Upper Levels TO Lower levels
+
+            p = 0
+            REPEAT
+                permut = FALSE
+                FOR i FROM 1 TO n-1-p 
+                    IF requestList[i] < requestList[i+1] THEN
+                        TEMP = requestList[i] 
+                        requestList[i] = requestList[i+1]
+                        requestList[i+1] = TEMP
+                        permut = TRUE 
+                    END IF
+                END FOR
+                p= p + 1
+            UNTIL permut = TRUE
+
+        END IF
+    END SEQUENCE
  
     ENDSEQUENCE 
 
@@ -166,7 +192,7 @@ END SEQUENCE
     // Manage request list 
     //**************************************************
      
-    SEQUENCE mainElevator *
+    SEQUENCE mainElevator 
         while requestList is not EMPTY and (not Emergency) 
             Call sortRequestList //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
             call move with requestList[0] // requestList[0] is the first floor which should be reached it can be 10, 7,....
@@ -188,10 +214,9 @@ END SEQUENCE
 END DEFINE
 
 
-
-//************************************
+//************************************************************************************************************
 // Outside_Button class
-//************************************
+//************************************************************************************************************
 
 DEFINE Outside_Button
 
@@ -201,63 +226,119 @@ DEFINE Outside_Button
 
     INIT Direction          :   'NULL'              //Possible values 'UP'/'Down'/'NULL'
     INIT CURRENT_Floor      :   callerposition      //floor number
-    INIT Status             :   Status          // desactivate or activate
-    INIT Btn[
-        Instantiate Outside_Button WITH Down,10, desactivate
-        Instantiate Outside_Button WITH down or up,9, desactivate                //instantiate button outside (up or down)
-        Instantiate Outside_Button WITH down or up,8, desactivate
-        Instantiate Outside_Button WITH down or up,7, desactivate
-        Instantiate Outside_Button WITH down or up,6, desactivate
-        Instantiate Outside_Button WITH down or up,5, desactivate
-        Instantiate Outside_Button WITH down or up,4, desactivate
-        Instantiate Outside_Button WITH down or up,3, desactivate
-        Instantiate Outside_Button WITH down or up,2, desactivate
-        Instantiate Outside_Button WITH down or up,1, desactivate
-    ]
+    INIT Status            :   Status              // desactivate or activate
+
+    //************************************
+    // change statuts : set status value
+    //************************************
+
+    SEQUENCE setStatus with status      
+        SET Status To status 
+    END SEQUENCE
+
+    //************************************
+    // GET statuts : return status value
+    //************************************
+
+    SEQUENCE getStatus with status     
+        RETURN Status 
+
 END DEFINE
-call elevator
-call find best elevator
-call operate elevator
-call move elevator
 
- 
-SEQUENCE CallElevator (id_direction,CURRENT_Floor)
-    call setButtonS
- // The best option is the nearest and already moving elevator that has the same direction that the current direction
-    // Verify if the request is on the elevators way, otherwise the elevator will just continue its way ignoring this call
-    // If there is no elevators moving at the same direction as the current direction, the nearest idle elevator is selected
+//************************************************************************************************************
+// Shaft class
+//************************************************************************************************************
 
-SEQUENCE findElevator USING CURRENT_Floor AND Direction AND ID_Elevator OF Shaft
-        SET ActiveID_Elevator TO EMPTY
-        SET IdleID_Elevator TO EMPTY
+DEFINE Shaft
 
-        FOR EACH elevator1 IN ID_Elevator
-            IF (elevator1 IS NOT "IDLE" AND elevator1 status IS EQUAL TO currentDirection) THEN  //if the elevator is active and has the same direction
-                IF (elevator1 status IS "UP" AND elevator1 floor IS < CURRENT_Floor OR elevator1 status IS "DOWN" AND elevator1 floor IS > CURRENT_Floor) THEN
-                    ADD elevator1 TO ActiveID_Elevator
+    INIT ID_Shaft = shaft
+    INIT Status = stauts 'ACTIVE' OR 'STOPPED'
+
+    INIT elevators [
+        Instantiate Elevator WITH 1 //idelevator
+        Instantiate Elevator WITH 2 //idelevator
+    ]
+    
+
+    INIT Btns[  //instantiate button outside (up or down) Parameters : direction, floor, status
+        Instantiate Outside_Button WITH Down ,10 ,desactivate
+        Instantiate Outside_Button WITH down ,9  ,desactivate
+        Instantiate Outside_Button WITH up   ,9  ,desactivate                
+        Instantiate Outside_Button WITH down ,8  ,desactivate
+        Instantiate Outside_Button WITH up   ,8  ,desactivate 
+        Instantiate Outside_Button WITH down ,7  ,desactivate
+        Instantiate Outside_Button WITH up   ,7  ,desactivate 
+        Instantiate Outside_Button WITH down ,6  ,desactivate
+        Instantiate Outside_Button WITH up   ,6  ,desactivate 
+        Instantiate Outside_Button WITH down ,5  ,desactivate
+        Instantiate Outside_Button WITH up   ,5  ,desactivate 
+        Instantiate Outside_Button WITH down ,4  ,desactivate
+        Instantiate Outside_Button WITH up   ,4  ,desactivate 
+        Instantiate Outside_Button WITH down ,3  ,desactivate
+        Instantiate Outside_Button WITH up   ,3  ,desactivate 
+        Instantiate Outside_Button WITH down ,2  ,desactivate
+        Instantiate Outside_Button WITH up   ,2  ,desactivate                 
+        Instantiate Outside_Button WITH up   ,1  ,desactivate
+    ]
+
+    SEQUENCE findElevator WITH Outside_Button
+
+        INIT eligibleElevator []
+        FOR EACH elevator IN elevators
+
+            if (elevator.status IS EQUAL TO activate) THEN 
+                if (elevator.direction IS EQUAL TO Outside_Button.direction) THEN
+                    if ((elevator.floor >= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO DOWN))                      
+                    OR ((elevator.floor <= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO UP)) THEN
+                        ADD elevator TO eligibleElevator
+                    END IF
                 ENDIF
-            ELSE 
-                ADD elevator1 TO IdleID_Elevator
-            ENDIF
-        ENDFOR
+            END IF
+        END FOR
+        
+        if length(eligibleElevator) IS NOT EQUAL TO 1 THEN
+            RETURN findNearestElevator WITH Outside_Button.CURRENT_Floor AND eligibleElevator
 
-        IF (ActiveID_Elevator IS not EMPTY) THEN
-            CALL findNearestElevator USING CURRENT_Floor AND ActiveID_Elevator
-        ELSE 
-            CALL findNearestElevator USING CURRENT_Floor AND IdleID_Elevator         
-
-        RETURN bestElevator 
+        RETURN eligibleElevator[0]
     ENDSEQUENCE
 
-SEQUENCE findNearestElevator USING ID_Elevator
-        SET bestElevator TO first elevator (elevator1) OF ID_Elevator     //lets take the first element of the array and compare it to each elevator1 of the array  
-        SET bestGap = |floor OF bestElevator - CURRENT_Floor|
-        FOR EACH elevator1 IN ID_Elevator 
-            IF (|floor OF elevator1 - CURRENT_Floor| <bestGap) THEN
-                SET bestElevator TO elevator1           
+
+    SEQUENCE findNearestElevator WITH current_floor AND elvatorsList
+        SET bestElevator TO first elevator[0]     //lets take the first element of the array and compare it to each elevator1 of the array  
+        SET bestGap = ||elevator.current_floor - current_floor|
+        FOR EACH elevator IN elvatorsList 
+            IF (|elevator.current_floor - current_floor| <bestGap) THEN
+                SET bestElevator TO elevator           
             ENDIF
         ENDFOR
         RETURN bestElevator 
-    ENDSEQUENCE
+    ENDSEQUENCE    
+
+
+
+    SEQUENCE mainShaft 
+        SET Status TO active
+        FOR EACH elevator IN elevators
+            CALL elevator.mainElevator
+        END FOR 
+    END SEQUENCE
+ENDDEFINE
+ //************************************************************************************************************
+// Elevator_Controller class
+//************************************************************************************************************
+
+DEFINE Elevator_Controller
+    INIT Status = stauts 'ACTIVE' OR 'STOPPED'
+    INIT shafts [
+        Instantiate shaft WITH 1, active //ID_Shaft, status
+    ]
+
+    SEQUENCE MainElevator_Controller 
+        SET Status TO active
+        FOR EACH shaft IN shafts
+            CALL shaft.mainShaft
+        END FOR 
+    END SEQUENCE
+
 
 ENDDEFINE

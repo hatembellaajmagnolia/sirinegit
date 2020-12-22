@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <script>
+function cToF(celsius) 
+{
+  var cTemp = celsius;
+  var cToFahr = cTemp * 9 / 5 + 32;
+  var message = cTemp+'\xB0C is ' + cToFahr + ' \xB0F.';
+    console.log(message);
+
+}
+
+function fToC(fahrenheit) 
+{
+  var fTemp = fahrenheit;
+  var fToCel = (fTemp - 32) * 5 / 9;
+  var message = fTemp+'\xB0F is ' + fToCel + '\xB0C.';
+    console.log(message);
+   
+} 
+
+
+
+      </script>
+  <meta charset="utf-8">
+  <title>Write a JavaScript program to convert temperatures to and from celsius, fahrenheit</title>
+  <script src="Temp.html" type="text/javascript"></script> 
+  </head>
+  <body>
+
+    <label> Temp°C :</label>
+    <input type="text" id="tempC" name="tempC" required
+       minlength="4" maxlength="8" size="10">
+
+       <label> Temp°F :</label>
+       <input type="text" id="tempF" name="tempF" required
+          minlength="4" maxlength="8" size="10">
+                     
+
+    <p id="demo">A Paragraph</p>
+    <button type="button" onclick="cToF(tempC)">Convert</button>
+
+
+</body>
+  </html>
+ 
