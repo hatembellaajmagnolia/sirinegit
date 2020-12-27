@@ -24,12 +24,12 @@ class ElevatorButton:
 # Elevator class
 class Elevator :
 # Properties declaration in constructor
-    def __init__(self,idelevator,direction,doorstatus,doorobstruction,requestlist,numberofperson,weigth,status,currentfloor,nbbutton):
+    def __init__(self,idelevator,direction,doorstatus,doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton):
         self.idelevator=idelevator
         self.direction=direction
         self.doorstatus=doorstatus
         self.doorobstruction=doorobstruction
-        self.requestlist=requestList
+        self.requestlist=[]
         self.numberofperson=numberofperson
         self.weight=weigth
         self.status=status
@@ -43,123 +43,101 @@ class Elevator :
 # Methods declaration
 # move : move the elevator to reach specific floor
    
-    def move(self,floorNumber):
-        if self.currentfloor==floorNumber:
-            print("Elevator : " + self.idelevator + "Stoped") 
+    def move(self,floornumber):
+        if self.currentfloor==floornumber:
+            print("Elevator : " + self.idelevator + " STOPPED ") 
             self.status ='STOPPED'
-        elif self.currentfloor < floorNumber:  
-            print("Elevator : " + self.idelevator + "Moving up")
+        elif self.currentfloor < floornumber:  
+            print("Elevator : " + self.idelevator + " MOVING UP ")
             self.status="MOVING UP"
         else:
-            print("Elevator : " + self.idelevator + "Moving DOWN")
+            print("Elevator : " + self.idelevator + " MOVING DOWN ")
             self.status="MOVING DOWN"
-        print("Elevator : " + self.idelevator + "Stoped") 
+        print("Elevator : " + self.idelevator + " STOPPED ") 
         self.status ='STOPPED'
-        self.currentfloor= floorNumber 
+        self.currentfloor= floornumber 
 
     # openDoor : open the door of the elevator  
-    def openDoor(self,)  
-        OPEN DOOR               //Execute system command - Electrical 
-        setDoorStatus("OPEN")
-    ENDSEQUENCE 
-
-    //**************************************************
-    // closeDoor : close the door of the elevator  
-    //**************************************************
+    def opendoor(self):
+        print("Elevator : " + self.idelevator + " OPEN DOOR ")   
+        self.setdoorstatus="OPEN"
      
-    SEQUENCE closeDoor 
-        WHILE (Weight == WeigthThreshold) OR (NumberOfPerson== MaxCapacity) OR DoorObstrcution 
-            CALL openDoor
-            BIP SIGNAL
-        END WHILE
-        CLOSE DOOR                
-        setDoorStatus("CLOSED")
-    ENDSEQUENCE 
+
+    
+    # closeDoor : close the door of the elevator   
+    def closedoor(self): 
+        while (self.weight >= WeigthThreshold) or (self.numberofperson>= MaxCapacity) or (self.doorobstruction):
+            self.opendoor()
+            print("Elevator : " + self.idelevator + " BIG SIGNAL ") 
+        self.closedoor()              
+        self.doorstatus="CLOSED"
+    
 
 
-    //**************************************************
-    // addToRequestList : add floor to the request list 
-    //**************************************************
-     
-    SEQUENCE addToRequestList with floorNumber 
-        ADD floorNumber To requestList
+  
+    #addToRequestList : add floor to the request list 
+    def addtorequestlist (self,nbfloor):
+        if nbfloor  not in self.requestlist:
+            self.requestlist.append(nbfloor)
+    
+    # removeFromRequestList : remove floor from the request list 
+    
+    def removeFromRequestList (self,nbfloor): 
+        self.requestlist.remove(nbfloor)
+    
 
-    ENDSEQUENCE 
-
-    //**************************************************
-    // removeFromRequestList : remove floor from the request list 
-    //**************************************************
-     
-    SEQUENCE removeFromRequestList with floorNumber 
-         remove floorNumber from requestList
-    ENDSEQUENCE 
-
-    //**************************************************
-    // sortRequestList : sort the request list 
-    //**************************************************
-     
-    SEQUENCE sortRequestList  
-        IF Elevator Direction IS GOING UP THEN
-            //SORT requestList FROM Lower Levels TO Upper levels
+   
+    # sortRequestList : sort the request list 
+    
+    def  sortrequestlist(self):  
+        if self.direction =="UP":
+            #SORT requestlist FROM Lower Levels TO Upper levels
             p = 0
-            REPEAT
-                permut = FALSE
-                FOR i FROM 1 TO n-1-p 
-                    IF requestList[i] > requestList[i+1] THEN
-                        TEMP = requestList[i] 
-                        requestList[i] = requestList[i+1]
-                        requestList[i+1] = TEMP
-                        permut = TRUE 
-                    END IF
-                END FOR
+            permut = False
+            while not permut :
+                for i in range(self.nbbutton-p):
+                    if self.requestlist[i] > self.requestlist[i+1]:
+                        TEMP = self.requestlist[i] 
+                        self.requestlist[i] = self.requestlist[i+1]
+                        self.requestlist[i+1] = TEMP
+                        permut = True  
                 p= p + 1
-            UNTIL permut = TRUE
+            
 
-        ELSE IF Elevator Direction IS GOING DOWN THEN
-            //SORT requestList FROM Upper Levels TO Lower levels
-
+        elif self.direction =="DOWN":
+            #SORT requestlist FROM Upper Levels TO Lower levels
             p = 0
-            REPEAT
-                permut = FALSE
-                FOR i FROM 1 TO n-1-p 
-                    IF requestList[i] < requestList[i+1] THEN
-                        TEMP = requestList[i] 
-                        requestList[i] = requestList[i+1]
-                        requestList[i+1] = TEMP
-                        permut = TRUE 
-                    END IF
-                END FOR
+            permut = False
+            while not permut :
+                for i in range(self.nbbutton-p):
+                    if self.requestlist[i] < self.requestlist[i+1]:
+                        TEMP = self.requestlist[i] 
+                        self.requestlist[i] = self.requestlist[i+1]
+                        self.requestlist[i+1] = TEMP
+                        permut = True  
                 p= p + 1
-            UNTIL permut = TRUE
 
-        END IF
-    END SEQUENCE
- 
-    ENDSEQUENCE 
-
-    //**************************************************
-    // mainElevator : open the door of the elevator  
-    // Manage request list 
-    //**************************************************
+    
+    # mainElevator : open the door of the elevator  
+    # Manage request list 
+    
      
-    SEQUENCE mainElevator 
-        while requestList is not EMPTY and (not Emergency) 
-            Call sortRequestList //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
-            call move with requestList[0] // requestList[0] is the first floor which should be reached it can be 10, 7,....
-            call openDoor
-            call removeFromRequestList with requestList[0]
-        END WHILE
-    ENDSEQUENCE
-
-    //**************************************************
-    // startElevator : Thez first time while the elevator start   
-    // Manage request list 
-    //**************************************************
+    def mainElevator(self): 
+        while  not Emergency:
+            for i in range (self.nbbutton):
+                if self.buttons[i].status=="activeted" and i not in self.requestlist:
+                    self.requestlist.append (i)
+          
+            self.sortRequestList()     #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            self.move(self.requestlist[0])    # requestlist[0] is the first floor which should be reached it can be 10, 7,....
+            self.openDoor()
+            self.removeFromRequestList(self.requestlist[0])
+       
+    # startElevator : The first time while the elevator start   
+    # Manage request list 
      
-    SEQUENCE startElevator with floorNumber
-        call move with floorNumber
-        call mainElevator
-    ENDSEQUENCE
-
-END DEFINE
+    def startElevator(self,floorNumber):
+        self. move(floorNumber) 
+        self. mainElevator()
+    
 
