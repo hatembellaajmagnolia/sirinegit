@@ -11,8 +11,7 @@ SET MaxCapacity         :   10      //  Measure Unit : Person / Max person that 
 //************************************
 INIT Emergency           :   FALSE   //  If Emergency all elevators should be evacuated  
 
-
-
+                    //class that describes button inside the elevator// 
 //************************************************************************************************************
 // Elevator_Button class
 //************************************************************************************************************
@@ -23,7 +22,7 @@ DEFINE Elevator_Button
     // Properties declaration
     //************************************
 
-    INIT ID_Button      : idButton        //button number
+    INIT ID_Button      : idButton        //button number  : a button is assigned to each floor
     INIT ID_Elevator    : idelevator      //elevator 1 or 2
     INIT Status         : Status          // desactivate or activate
 
@@ -41,6 +40,7 @@ DEFINE Elevator_Button
 
     SEQUENCE getStatus with status     
         RETURN Status 
+    END SEQUENCE
 
 END DEFINE
 
