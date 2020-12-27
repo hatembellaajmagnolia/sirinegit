@@ -1,0 +1,371 @@
+
+//************************************
+// DEFINE CONSTANTS VALUES 
+//************************************
+SET WeigthThreshold     :   500     //  Measure Unit : KG / Max wight that elevator can support 
+SET MaxCapacity         :   10      //  Measure Unit : Person / Max person that elevator can contain
+
+
+//************************************
+// DEFINE GLOBAL PARAMETERS 
+//************************************
+INIT Emergency           :   FALSE   //  If Emergency all elevators should be evacuated  
+
+
+
+//************************************************************************************************************
+// Elevator_Button class
+//************************************************************************************************************
+
+DEFINE Elevator_Button  
+    
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT ID_Button      : idButton        //button number
+    INIT ID_Elevator    : idelevator      //elevator 1 or 2
+    INIT Status         : Status          // desactivate or activate
+
+    //************************************
+    // change statuts : set status value
+    //************************************
+
+    SEQUENCE setStatus with status      
+        SET Status To status 
+    END SEQUENCE
+
+    //************************************
+    // GET statuts : return status value
+    //************************************
+
+    SEQUENCE getStatus with status     
+        RETURN Status 
+
+END DEFINE
+
+
+//************************************************************************************************************
+// Elevator class
+//************************************************************************************************************
+
+DEFINE ELEVATOR 
+
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT B[] 
+    INIT ID_Elevator        : idelevator        //elevator 1 or 2
+    INIT Direction          : "NULL"        //Possible values 'UP'/'Down'/'NULL'
+    INIT DoorStatus         : 'CLOSED'      //Possible values 'CLOSED'/'OPEN'
+    INIT DoorObstrcution    : 'FALSE'       //Possible values 'FALSE'/'TRUE'
+    INIT requestList        : []            //List of all request made by callers inside and outside the elevator
+    INIT NumberOfPerson     :   0           // Number of persons in the elevator 
+    INIT Weigth             :   0           // The weigth of persons inside the elevator 
+    INIT Status             :   'IDLE'      //Possible values 'MOVING'/'STOPPED'/'IDLE'
+    INIT CURRENT_Floor      :   0           //0 is default value
+
+
+
+    //************************************
+
+
+    // Methods declaration
+    //************************************
+
+    //**************************************************
+    // move : move the elevator to reach specific floor
+    //**************************************************
+
+    SEQUENCE move with floorNumber
+        if CURRENT_Floor = floorNumber THEN    
+            CALL setStatus with 'STOPPED'
+        else if CURRENT_Floor < floorNumber THEN    
+            MOVE UP to floorNumber
+            CALL setStatus with 'MOVING'
+        else 
+            MOVE DOWN to floorNumber
+            CALL setStatus with 'MOVING'
+        END IF 
+        CALL setStatus with 'STOPPED'
+        CURRENT_Floor = floorNumber 
+    END SEQUENCE
+
+
+    //**************************************************
+    // openDoor : open the door of the elevator  
+    //**************************************************
+     
+    SEQUENCE openDoor  
+        OPEN DOOR               //Execute system command - Electrical 
+        setDoorStatus("OPEN")
+    ENDSEQUENCE 
+
+    //**************************************************
+    // closeDoor : close the door of the elevator  
+    //**************************************************
+     
+    SEQUENCE closeDoor 
+        WHILE (Weight == WeigthThreshold) OR (NumberOfPerson== MaxCapacity) OR DoorObstrcution 
+            CALL openDoor
+            BIP SIGNAL
+        END WHILE
+        CLOSE DOOR                
+        setDoorStatus("CLOSED")
+    ENDSEQUENCE 
+
+
+    //**************************************************
+    // addToRequestList : add floor to the request list 
+    //**************************************************
+     
+    SEQUENCE addToRequestList with floorNumber 
+        ADD floorNumber To requestList
+
+    ENDSEQUENCE 
+
+    //**************************************************
+    // removeFromRequestList : remove floor from the request list 
+    //**************************************************
+     
+    SEQUENCE removeFromRequestList with floorNumber 
+         remove floorNumber from requestList
+    ENDSEQUENCE 
+
+    //**************************************************
+    // sortRequestList : sort the request list 
+    //**************************************************
+     
+    SEQUENCE sortRequestList  
+        IF Elevator Direction IS GOING UP THEN
+            //SORT requestList FROM Lower Levels TO Upper levels
+            p = 0
+            REPEAT
+                permut = FALSE
+                FOR i FROM 1 TO n-1-p 
+                    IF requestList[i] > requestList[i+1] THEN
+                        TEMP = requestList[i] 
+                        requestList[i] = requestList[i+1]
+                        requestList[i+1] = TEMP
+                        permut = TRUE 
+                    END IF
+                END FOR
+                p= p + 1
+            UNTIL permut = TRUE
+
+        ELSE IF Elevator Direction IS GOING DOWN THEN
+            //SORT requestList FROM Upper Levels TO Lower levels
+
+            p = 0
+            REPEAT
+                permut = FALSE
+                FOR i FROM 1 TO n-1-p 
+                    IF requestList[i] < requestList[i+1] THEN
+                        TEMP = requestList[i] 
+                        requestList[i] = requestList[i+1]
+                        requestList[i+1] = TEMP
+                        permut = TRUE 
+                    END IF
+                END FOR
+                p= p + 1
+            UNTIL permut = TRUE
+
+        END IF
+    END SEQUENCE
+ 
+    ENDSEQUENCE 
+
+    //**************************************************
+    // mainElevator : open the door of the elevator  
+    // Manage request list 
+    //**************************************************
+     
+    SEQUENCE mainElevator 
+        while requestList is not EMPTY and (not Emergency) 
+            Call sortRequestList //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            call move with requestList[0] // requestList[0] is the first floor which should be reached it can be 10, 7,....
+            call openDoor
+            call removeFromRequestList with requestList[0]
+        END WHILE
+    ENDSEQUENCE
+
+    //**************************************************
+    // startElevator : Thez first time while the elevator start   
+    // Manage request list 
+    //**************************************************
+     
+    SEQUENCE startElevator with floorNumber
+        call move with floorNumber
+        call mainElevator
+    ENDSEQUENCE
+
+END DEFINE
+
+
+//************************************************************************************************************
+// Outside_Button class
+//************************************************************************************************************
+
+DEFINE Outside_Button
+
+    //************************************
+    // Properties declaration
+    //************************************
+
+    INIT Direction          :   'NULL'              //Possible values 'UP'/'Down'/'NULL'
+    INIT CURRENT_Floor      :   callerposition      //floor number
+    INIT Status            :   Status              // desactivate or activate
+
+    //************************************
+    // change statuts : set status value
+    //************************************
+
+    SEQUENCE setStatus with status      
+        SET Status To status 
+    END SEQUENCE
+
+    //************************************
+    // GET statuts : return status value
+    //************************************
+
+    SEQUENCE getStatus with status     
+        RETURN Status 
+
+END DEFINE
+
+//************************************************************************************************************
+// Shaft class
+//************************************************************************************************************
+
+DEFINE Shaft
+
+    INIT ID_Shaft = shaft
+    INIT Status = stauts 'ACTIVE' OR 'STOPPED'
+    INIT nbFloor : nbfloor 
+    INIT nbElevators : nbelvators default 3
+    INIT nbBasment : nbbasment 
+
+
+    SEQUENCE Constructor  WITH nbelevators, nbfloor, nbbasment
+        SET Status TO active
+        INIT nbElevators TO nbelevators
+        INIT nbFloor TO nbfloor
+        INIT nbBasment TO nbbasment
+
+        FOR i from 1 TO nbElevators
+            INIT elevators[i] TO Instantiate Elevator WITH i, active //idelevator
+        END FOR 
+
+        INIT j TO 1
+        INIT Btns[j] Instantiate Outside_Button WITH up   ,1  ,desactivate
+        j++
+
+        FOR i from 2 TO nbFloor-1
+            //instantiate button outside (up or down) Parameters : direction, floor, status
+            INIT Btns[j] TO Instantiate Outside_Button WITH Down ,i ,desactivate
+            j++
+            INIT Btns[j] Instantiate Outside_Button WITH up   ,i  ,desactivate
+            j++
+        END FOR 
+
+        INIT Btns[j] TO Instantiate Outside_Button WITH Down ,i ,desactivate
+
+
+    END SEQUENCE 
+
+        
+
+
+
+    INIT elevators []
+    INIT Btns[]
+
+    INIT Btns[  
+        Instantiate Outside_Button WITH Down ,10 ,desactivate
+        Instantiate Outside_Button WITH down ,9  ,desactivate
+               
+        Instantiate Outside_Button WITH down ,8  ,desactivate
+        Instantiate Outside_Button WITH up   ,8  ,desactivate 
+        Instantiate Outside_Button WITH down ,7  ,desactivate
+        Instantiate Outside_Button WITH up   ,7  ,desactivate 
+        Instantiate Outside_Button WITH down ,6  ,desactivate
+        Instantiate Outside_Button WITH up   ,6  ,desactivate 
+        Instantiate Outside_Button WITH down ,5  ,desactivate
+        Instantiate Outside_Button WITH up   ,5  ,desactivate 
+        Instantiate Outside_Button WITH down ,4  ,desactivate
+        Instantiate Outside_Button WITH up   ,4  ,desactivate 
+        Instantiate Outside_Button WITH down ,3  ,desactivate
+        Instantiate Outside_Button WITH up   ,3  ,desactivate 
+        Instantiate Outside_Button WITH down ,2  ,desactivate
+        Instantiate Outside_Button WITH up   ,2  ,desactivate                 
+        Instantiate Outside_Button WITH up   ,1  ,desactivate
+    ]
+
+    SEQUENCE findElevator WITH Outside_Button
+
+        INIT eligibleElevator []
+        FOR EACH elevator IN elevators
+
+            if (elevator.status IS EQUAL TO activate) THEN 
+                if (elevator.direction IS EQUAL TO Outside_Button.direction) THEN
+                    if ((elevator.floor >= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO DOWN))                      
+                    OR ((elevator.floor <= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO UP)) THEN
+                        ADD elevator TO eligibleElevator
+                    END IF
+                ENDIF
+            END IF
+        END FOR
+        
+        if length(eligibleElevator) IS NOT EQUAL TO 1 THEN
+            RETURN findNearestElevator WITH Outside_Button.CURRENT_Floor AND eligibleElevator
+
+        RETURN eligibleElevator[0]
+    ENDSEQUENCE
+
+
+    SEQUENCE findNearestElevator WITH current_floor AND elvatorsList
+        SET bestElevator TO first elevator[0]     //lets take the first element of the array and compare it to each elevator1 of the array  
+        SET bestGap = ||elevator.current_floor - current_floor|
+        FOR EACH elevator IN elvatorsList 
+            IF (|elevator.current_floor - current_floor| <bestGap) THEN
+                SET bestElevator TO elevator           
+            ENDIF
+        ENDFOR
+        RETURN bestElevator 
+    ENDSEQUENCE    
+
+
+
+    SEQUENCE mainShaft 
+        SET Status TO active
+        FOR EACH elevator IN elevators
+            CALL elevator.mainElevator
+        END FOR 
+    END SEQUENCE
+ENDDEFINE
+ //************************************************************************************************************
+// COMMERCIAL_Controller class
+//************************************************************************************************************
+
+DEFINE COMMERCIAL_Controller
+    INIT Status : stauts 'ACTIVE' OR 'STOPPED'
+    INIT nbShaft : 3 //Can be set in general case as n > 0
+    INIT shafts [] // Array of shafts 
+
+    SEQUENCE Constructor  
+        SET Status TO active
+        FOR i from 1 TO nbShaft
+            INIT shafts[i] TO Instantiate Shaft WITH i, active //ID_Shaft, status
+        END FOR 
+    END SEQUENCE    
+
+    SEQUENCE MainElevator_Controller 
+        SET Status TO active
+        FOR EACH shaft IN shafts
+            CALL shaft.mainShaft
+        END FOR 
+    END SEQUENCE
+
+
+ENDDEFINE
