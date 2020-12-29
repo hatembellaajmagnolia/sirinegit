@@ -146,7 +146,7 @@ class shaft :
         # add outside buttons
         self.outsidebuttons=[]
         self.outsidebuttons.append(outsidebutton("UP",0,"DESACTIVATED"))
-        for i in range(1,self.nbfloor-1):
+        for i in range(1,nbfloor-1):
             #instantiate button outside (up or down) Parameters : direction, floor, status
             self.outsidebutton.append(outsidebutton("DOWN",i,"DESACTIVETED"))
             self.outsidebuttons.append(outsidebutton("UP",i,"DESACTIVETED"))
