@@ -160,7 +160,7 @@ class shaft :
                         self.eligibleElevator.append(elevator)
         
         if len(self.eligiblelevator) != 1 :
-            return findnearestelevator(outsidebutton,self.eligiblelevator) 
+            return self.findnearestelevator(outsidebutton,self.eligiblelevator) 
 
         return self.eligiblelevator[0]
    
