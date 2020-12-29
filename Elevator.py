@@ -155,8 +155,8 @@ class shaft :
     def findelevator(self,outsidebutton):
         self.eligiblelevator= []
         for  elevator in self.elevators:
-            if(self.elevator.status=="ACTIVETED")and(self.elevator.direction== outsidebutton.direction): 
-                if((self.elevator.floor >= outsidebutton.currentfloor) and (self.elevator.direction == "DOWN"))or ((self.elevator.floor <= outsidebutton.currentfloor) and (self.elevator.direction == "UP")):
+            if(elevator.status=="ACTIVETED")and(elevator.direction== outsidebutton.direction): 
+                if((elevator.floor >= outsidebutton.currentfloor) and (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP")):
                         self.eligibleElevator.append(elevator)
         
         if len(eligiblelevator) != 1 :
