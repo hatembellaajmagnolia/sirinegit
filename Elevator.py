@@ -38,7 +38,7 @@ class Elevator :
         self.nbbutton=nbbutton
         self.buttons=[]
         for i in range (nbbutton):
-            self.buttons[i]= ElevatorButton(i,self.idelevator,"desactivate")
+            self.buttons.append(ElevatorButton(i,self.idelevator,"DESACTIVATED"))
 
 
 # Methods declaration
@@ -188,7 +188,7 @@ class elevatorcontroller:
         self.status = status  #'ACTIVE' OR 'STOPPED'
         self.shaft =[]
         for i in range(nbshaft):
-            self.shafts[i]= shaft(i,"ACTIVATED",2,10)
+            self.shafts.append(shaft(i,"ACTIVATED",2,10))
     def mainelevatorcontroller(self): 
         self.status ="ACTIVATED"
         for shaft in self.shafts :
