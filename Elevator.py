@@ -141,17 +141,14 @@ class shaft :
         self.nbelevator=nbelevator
         #add elevators to shaft
         for i in range(self.nbelevator): 
-            self.elvators[i]= Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor)
+            self.elvators.append(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor))
         # add outside buttons
-        j = 0
-        self.outsidebuttons[j] = outsidebutton("UP",self.idshaft,0,"DESACTIVATED")
+        self.outsidebuttons.append(outsidebutton("UP",self.idshaft,0,"DESACTIVATED"))
         for i in range(1,self.nbfloor-1):
             #instantiate button outside (up or down) Parameters : direction, floor, status
-            self.outsidebutton[j]= outsidebutton("DOWN",i,"DESACTIVETED")
-            j= j+1
-            self.outsidebuttons[j]=outsidebutton("UP",i,"DESACTIVETED")
-            j=j+1
-        self .outsidebuttons[j] = outsidebutton("DOWN",i,"DESACTIVETED")
+            self.outsidebutton.append(outsidebutton("DOWN",i,"DESACTIVETED"))
+            self.outsidebuttons.append(outsidebutton("UP",i,"DESACTIVETED"))
+        self.outsidebuttons[j] = outsidebutton("DOWN",i,"DESACTIVETED")
 
     def findelevator(self,outsidebutton):
         self.eligiblelevator= []
