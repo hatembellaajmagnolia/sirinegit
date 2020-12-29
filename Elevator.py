@@ -115,20 +115,18 @@ class Elevator :
         self. move(floornumber) 
         self. mainelevator()
 
-     # outsidebutton class
-    class outsidebutton :
-     #Properties declaration
-        def __init__(self,direction,currentfloor,status):
-            self.direction = direction
-            self.currentfloor = currentfloor
-            self.status = status
+# outsidebutton class
+class outsidebutton :
+    #Properties declaration
+    def __init__(self,direction,currentfloor,status):
+        self.direction = direction
+        self.currentfloor = currentfloor
+        self.status = status
    # Getter and Setter
     def setstatus(self,status):
         self.status=status
     def getstatus(self):
         return self.statuts
-
-
 # Shaft class
 class shaft :
     def __init__(self,idshaft,status,nbelevator):
@@ -139,59 +137,54 @@ class shaft :
         for i in range(self.nbelevator): 
             self.elvators[i]= Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,10)
         # add outside buttons
-        j = 1
-        self.outsidebuttons[j] = outsidebutton()
-        
-
-        for i in range(self.2-nbfloor-1):
+        j = 0
+        self.outsidebuttons[j] = outsidebutton("UP",self.idshaft,0,"DESACTIVATED")
+        for i in range(1,self.nbfloor-1):
             #instantiate button outside (up or down) Parameters : direction, floor, status
             self.outsidebutton[j]= outsidebutton("DOWN",i,"DESACTIVETED")
-            j++
+            j= j+1
             self.outsidebuttons[j]=outsidebutton("UP",i,"DESACTIVETED")
-            j++
-        self .outsidebuttons[j] TO Instantiate Outside_Button WITH Down ,i ,desactivate
-    def findElevator(self,Outside_Button):
+            j=j+1
+        self .outsidebuttons[j] = outsidebutton("DOWN",i,"DESACTIVETED")
 
-        self. eligibleElevator []:
-        FOR EACH elevator IN elevators
-            if (elevator.status IS EQUAL TO activate)  
-                if (elevator.direction IS EQUAL TO Outside_Button.direction) 
-                    if ((elevator.floor >= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO DOWN))                      
-                    OR ((elevator.floor <= Outside_Button.CURRENT_Floor) AND (elevator.direction IS EQUAL TO UP)) THEN
-                        ADD elevator TO eligibleElevator
+    def findElevator(self,outsidebutton):
+        self. eligibleElevator= []
+        for  elevator in self.elevators:
+            if (self .elevator.status=="ACTIVETED"):  
+                if (self .elevator.direction== outsidebutton.direction): 
+                    if ((self.elevator.floor >= outsidebutton.currentfloor) and (self.elevator.direction == "DOWN"))or ((self.elevator.floor <= outsidebutton.currentfloor) and (self.elevator.direction == "UP")):
+                        self. eligibleElevator.append(elevator)
         
-        if length(eligibleElevator) IS NOT EQUAL TO 1 THEN
-            RETURN findNearestElevator WITH Outside_Button.CURRENT_Floor AND eligibleElevator
+        if len(eligibleElevator) != 1 :
+            return findnearestelevator(outsidebutton,eligibleElevator) 
 
-        RETURN eligibleElevator[0]
+        return eligibleElevator[0]
    
+    def findnearestelevator(self,currentfloor,elevatorslist):
+        bestelevator = elevatorslist[0]     #lets take the first element of the array and compare it to each elevator1 of the array  
+        bestgap = abs(bestelevator.currentfloor - currentfloor)
+        for elevator in elevatorslist: 
+            if abs(elevator.currentfloor - currentfloor <bestgap):
+                bestelevator = elevator                 
+        return bestelevator 
 
+    def mainshaft(self):
+        status = "ACTIVE"
+        for elevator in self.elevators : 
+            elevator.mainelevator()
 
-    def findNearestElevator WITH current_floor AND elvatorsList:
-        SET bestElevator TO first elevator[0]     //lets take the first element of the array and compare it to each elevator1 of the array  
-        SET bestGap = ||elevator.current_floor - current_floor|
-        FOR EACH elevator IN elvatorsList 
-            IF (|elevator.current_floor - current_floor| <bestGap) THEN
-                SET bestElevator TO elevator           
-            
-        RETURN bestElevator 
-
-    def mainShaft: 
-        SET Status TO active
-        FOR EACH elevator IN elevators
-            CALL elevator.mainElevator
- 
 # Elevator_Controller class
-class Elevator_Controller
-    self.Status = stauts 'ACTIVE' OR 'STOPPED'
-    self.shafts [
-        Instantiate shaft WITH 1, active //ID_Shaft, status
-    ]
-
-    def MainElevator_Controller: 
-        SET Status TO active
-        FOR EACH shaft IN shafts
-            CALL shaft.mainShaft
+class elevatorcontroller(shafts,status):
+    def __init__(self,shafts,status):
+        self.status = status  #'ACTIVE' OR 'STOPPED'
+        self.shafts =[]
+        for i in range(self.shafts):
+            self.shafts[i]= shaft(i,"ACTIVATED")
+    
+    def MainElevator_Controller(self): 
+        status ="active"
+        for shaft in self.shafts :
+            shaft.mainShaft()
     
 
 
