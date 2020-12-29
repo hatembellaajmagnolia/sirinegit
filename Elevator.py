@@ -1,10 +1,4 @@
 # DEFINE CONSTANTS VALUES 
-from pip._vendor.cachecontrol import controller
-
-from pip._vendor.cachecontrol import controller
-
-from pip._vendor.cachecontrol import controller
-
 WeigthThreshold     = 500      #  Measure Unit : KG / Max wight that elevator can support 
 MaxCapacity         =  10      #  Measure Unit : Person / Max person that elevator can contain
 strElevator         = "Elevator: "  #constant for print
