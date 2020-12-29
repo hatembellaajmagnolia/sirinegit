@@ -281,26 +281,7 @@ DEFINE Shaft
     INIT elevators []
     INIT Btns[]
 
-    INIT Btns[  
-        Instantiate Outside_Button WITH Down ,10 ,desactivate
-        Instantiate Outside_Button WITH down ,9  ,desactivate
-               
-        Instantiate Outside_Button WITH down ,8  ,desactivate
-        Instantiate Outside_Button WITH up   ,8  ,desactivate 
-        Instantiate Outside_Button WITH down ,7  ,desactivate
-        Instantiate Outside_Button WITH up   ,7  ,desactivate 
-        Instantiate Outside_Button WITH down ,6  ,desactivate
-        Instantiate Outside_Button WITH up   ,6  ,desactivate 
-        Instantiate Outside_Button WITH down ,5  ,desactivate
-        Instantiate Outside_Button WITH up   ,5  ,desactivate 
-        Instantiate Outside_Button WITH down ,4  ,desactivate
-        Instantiate Outside_Button WITH up   ,4  ,desactivate 
-        Instantiate Outside_Button WITH down ,3  ,desactivate
-        Instantiate Outside_Button WITH up   ,3  ,desactivate 
-        Instantiate Outside_Button WITH down ,2  ,desactivate
-        Instantiate Outside_Button WITH up   ,2  ,desactivate                 
-        Instantiate Outside_Button WITH up   ,1  ,desactivate
-    ]
+   
 
     SEQUENCE findElevator WITH Outside_Button
 
