@@ -1,4 +1,10 @@
 # DEFINE CONSTANTS VALUES 
+from pip._vendor.cachecontrol import controller
+
+from pip._vendor.cachecontrol import controller
+
+from pip._vendor.cachecontrol import controller
+
 WeigthThreshold     = 500      #  Measure Unit : KG / Max wight that elevator can support 
 MaxCapacity         =  10      #  Measure Unit : Person / Max person that elevator can contain
 strElevator         = "Elevator: "  #constant for print
@@ -129,13 +135,13 @@ class outsidebutton :
         return self.statuts
 # Shaft class
 class shaft :
-    def __init__(self,idshaft,status,nbelevator):
+    def __init__(self,idshaft,status,nbelevator,nbfloor):
         self.idshaft=idshaft
         self.status=status
         self.nbelevator=nbelevator
         #add elevators to shaft
         for i in range(self.nbelevator): 
-            self.elvators[i]= Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,10)
+            self.elvators[i]= Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor)
         # add outside buttons
         j = 0
         self.outsidebuttons[j] = outsidebutton("UP",self.idshaft,0,"DESACTIVATED")
@@ -147,18 +153,17 @@ class shaft :
             j=j+1
         self .outsidebuttons[j] = outsidebutton("DOWN",i,"DESACTIVETED")
 
-    def findElevator(self,outsidebutton):
-        self. eligibleElevator= []
+    def findelevator(self,outsidebutton):
+        self.eligiblelevator= []
         for  elevator in self.elevators:
-            if (self .elevator.status=="ACTIVETED"):  
-                if (self .elevator.direction== outsidebutton.direction): 
-                    if ((self.elevator.floor >= outsidebutton.currentfloor) and (self.elevator.direction == "DOWN"))or ((self.elevator.floor <= outsidebutton.currentfloor) and (self.elevator.direction == "UP")):
-                        self. eligibleElevator.append(elevator)
+            if(self.elevator.status=="ACTIVETED")and(self.elevator.direction== outsidebutton.direction): 
+                if((self.elevator.floor >= outsidebutton.currentfloor) and (self.elevator.direction == "DOWN"))or ((self.elevator.floor <= outsidebutton.currentfloor) and (self.elevator.direction == "UP")):
+                        self.eligibleElevator.append(elevator)
         
-        if len(eligibleElevator) != 1 :
-            return findnearestelevator(outsidebutton,eligibleElevator) 
+        if len(eligiblelevator) != 1 :
+            return findnearestelevator(outsidebutton,eligiblelevator) 
 
-        return eligibleElevator[0]
+        return eligiblelevator[0]
    
     def findnearestelevator(self,currentfloor,elevatorslist):
         bestelevator = elevatorslist[0]     #lets take the first element of the array and compare it to each elevator1 of the array  
@@ -169,22 +174,57 @@ class shaft :
         return bestelevator 
 
     def mainshaft(self):
-        status = "ACTIVE"
+        self.status = "ACTIVE"
         for elevator in self.elevators : 
             elevator.mainelevator()
 
 # Elevator_Controller class
-class elevatorcontroller(shafts,status):
-    def __init__(self,shafts,status):
+class elevatorcontroller:
+    def __init__(self,nbshaft,status):
         self.status = status  #'ACTIVE' OR 'STOPPED'
-        self.shafts =[]
-        for i in range(self.shafts):
-            self.shafts[i]= shaft(i,"ACTIVATED")
-    
-    def MainElevator_Controller(self): 
-        status ="active"
+        self.shaft =[]
+        for i in range(nbshaft):
+            self.shafts[i]= shaft(i,"ACTIVATED",2,10)
+    def mainelevatorcontroller(self): 
+        self.status ="ACTIVATED"
         for shaft in self.shafts :
             shaft.mainShaft()
-    
 
+ec = elevatorcontroller(1,"ACTIVATED")
+ec.mainelevatorcontroller()
+ec.shaft.elevatorList[0].elevatorfloor = 10
+ec.shaft.elevatorList[1].elevatorfloor = 3
+ec.shaft.outsidebuttons[6].status = "ACTIVATED" #floor 3 to up activeted
+ec.shaft.outsidebuttons[2].status = "ACTIVATED" #floor 1 to up activeted
+ec.shaft.outsidebuttons[17].status = "ACTIVATED" #floor 9 to down activeted
 
+elevator = controller.RequestElevator(1, "up",1)
+controller.RequestFloor(elevator, 6,1)
+elevator = controller.RequestElevator(3, "up",1)
+controller.RequestFloor(elevator, 5,1)
+elevator = controller.RequestElevator(9, "down",1)
+controller.RequestFloor(elevator, 2,1)
+print("==============================")
+print("End Senario 2")
+print("==============================")
+
+#// // //------------- WORKINGGGG - -------------//// //
+
+controller = elevatorcontroller(10, 2)
+
+controller.column.elevatorList[0].elevator_floor = 10
+controller.column.elevatorList[0].status = "moving"
+controller.column.elevatorList[0].elevator_currentDirection = "down"
+controller.column.elevatorList[1].elevator_floor = 3
+controller.column.elevatorList[1].status = "moving"
+controller.column.elevatorList[1].elevator_currentDirection = "down"
+
+print(controller.column.elevatorList)
+elevator = controller.RequestElevator(10, "down",1)
+controller.RequestFloor(elevator, 3,1)
+
+elevator = controller.RequestElevator(3, "down",1)
+controller.RequestFloor(elevator, 2,1)
+print("==============================")
+print("End Senario 3")
+print("==============================")
