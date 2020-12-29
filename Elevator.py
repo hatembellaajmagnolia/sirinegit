@@ -191,7 +191,7 @@ class elevatorcontroller:
     def mainelevatorcontroller(self): 
         self.status ="ACTIVATED"
         for shaft in self.shafts :
-            shaft.mainShaft()
+            shaft.mainshaft()
 
 ec = elevatorcontroller(1,"ACTIVATED")
 ec.mainelevatorcontroller()
