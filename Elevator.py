@@ -140,6 +140,7 @@ class shaft :
         self.status=status
         self.nbelevator=nbelevator
         #add elevators to shaft
+        self.elevators=[]
         for i in range(self.nbelevator): 
             self.elevators.append(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor))
         # add outside buttons
