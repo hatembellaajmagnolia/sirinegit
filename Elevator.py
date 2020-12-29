@@ -186,7 +186,7 @@ class shaft :
 class elevatorcontroller:
     def __init__(self,nbshaft,status):
         self.status = status  #'ACTIVE' OR 'STOPPED'
-        self.shaft =[]
+        self.shafts =[]
         for i in range(nbshaft):
             self.shafts.append(shaft(i,"ACTIVATED",2,10))
     def mainelevatorcontroller(self): 
