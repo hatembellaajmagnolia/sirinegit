@@ -98,21 +98,27 @@ class Elevator :
         self.requestlist.sort()
         if self.direction =="DOWN":
             self.requestlist.reverse()
+            
+    def __str__(self):
+        res = " id : " + self.idelevator + " \n direction : " +  self.direction + " \n requestlist : " + str(self.requestlist)  
+    
     
     # mainElevator : open the door of the elevator  
     # Manage request list 
     
      
     def mainelevator(self): 
-        while  not Emergency:
+        while  (not Emergency) and (len(self.requestlist)!=0) :
             for i in range (self.nbbutton):
                 if self.buttons[i].status=="activeted" and i not in self.requestlist:
                     self.requestlist.append (i)
-          
+            
             self.sortrequestlist()     #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            print(str(self))
             self.move(self.requestlist[0])    # requestlist[0] is the first floor which should be reached it can be 10, 7,....
             self.opendoor()
             self.removefromrequestlist(self.requestlist[0])
+            print(str(self))
        
     # startElevator : The first time while the elevator start   
     # Manage request list 
@@ -175,8 +181,12 @@ class shaft :
 
     def mainshaft(self):
         self.status = "ACTIVE"
+        for outside in self.outsidebutton:
+            e = self.findelevator(outside) #Get the elgible elevator to handle request 
+            e.addtorequestlist(outside.currentfloor) #add the floor to handle to the requestlist of the elevator
         for elevator in self.elevators : 
             elevator.mainelevator()
+            
 
 # Elevator_Controller class
 class elevatorcontroller:
@@ -197,34 +207,38 @@ ec.shaft.elevatorList[1].elevatorfloor = 3
 ec.shaft.outsidebuttons[6].status = "ACTIVATED" #floor 3 to up activeted
 ec.shaft.outsidebuttons[2].status = "ACTIVATED" #floor 1 to up activeted
 ec.shaft.outsidebuttons[17].status = "ACTIVATED" #floor 9 to down activeted
+ec.shaft.mainshaft()
 
-elevator = controller.RequestElevator(1, "up",1)
-controller.RequestFloor(elevator, 6,1)
-elevator = controller.RequestElevator(3, "up",1)
-controller.RequestFloor(elevator, 5,1)
-elevator = controller.RequestElevator(9, "down",1)
-controller.RequestFloor(elevator, 2,1)
-print("==============================")
-print("End Senario 2")
-print("==============================")
+
+
+
+#elevator = controller.RequestElevator(1, "up",1)
+#controller.RequestFloor(elevator, 6,1)
+#elevator = controller.RequestElevator(3, "up",1)
+#controller.RequestFloor(elevator, 5,1)
+#elevator = controller.RequestElevator(9, "down",1)
+#controller.RequestFloor(elevator, 2,1)
+#print("==============================")
+#print("End Senario 2")
+#print("==============================")
 
 #// // //------------- WORKINGGGG - -------------//// //
 
-controller = elevatorcontroller(10, 2)
+#controller = elevatorcontroller(10, 2)
 
-controller.column.elevatorList[0].elevator_floor = 10
-controller.column.elevatorList[0].status = "moving"
-controller.column.elevatorList[0].elevator_currentDirection = "down"
-controller.column.elevatorList[1].elevator_floor = 3
-controller.column.elevatorList[1].status = "moving"
-controller.column.elevatorList[1].elevator_currentDirection = "down"
+#controller.column.elevatorList[0].elevator_floor = 10
+#controller.column.elevatorList[0].status = "moving"
+#controller.column.elevatorList[0].elevator_currentDirection = "down"
+#controller.column.elevatorList[1].elevator_floor = 3
+#controller.column.elevatorList[1].status = "moving"
+#controller.column.elevatorList[1].elevator_currentDirection = "down"
 
-print(controller.column.elevatorList)
-elevator = controller.RequestElevator(10, "down",1)
-controller.RequestFloor(elevator, 3,1)
+#print(controller.column.elevatorList)
+#elevator = controller.RequestElevator(10, "down",1)
+#controller.RequestFloor(elevator, 3,1)
 
-elevator = controller.RequestElevator(3, "down",1)
-controller.RequestFloor(elevator, 2,1)
-print("==============================")
-print("End Senario 3")
-print("==============================")
+#elevator = controller.RequestElevator(3, "down",1)
+#controller.RequestFloor(elevator, 2,1)
+#print("==============================")
+#print("End Senario 3")
+#print("==============================")
