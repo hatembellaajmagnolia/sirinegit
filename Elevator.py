@@ -178,8 +178,9 @@ class shaft :
     def mainshaft(self):
         self.status = "ACTIVE"
         for outside in self.outsidebuttons:
-            e = self.findelevator(outside) #Get the elgible elevator to handle request 
-            e.addtorequestlist(outside.currentfloor) #add the floor to handle to the requestlist of the elevator
+            if outside.status=="ACTIVATED":
+                e = self.findelevator(outside) #Get the elgible elevator to handle request 
+                e.addtorequestlist(outside.currentfloor) #add the floor to handle to the requestlist of the elevator
         for elevator in self.elevators : 
             elevator.mainelevator()
             
