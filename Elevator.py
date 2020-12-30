@@ -95,6 +95,7 @@ class Elevator :
             
     def __str__(self):
         res = " id : " + str(self.idelevator) + " \n direction : " +  self.direction + " \n requestlist : " + str(self.requestlist)  
+        return res
     
     
     # mainElevator : open the door of the elevator  
