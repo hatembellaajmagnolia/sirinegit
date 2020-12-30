@@ -94,7 +94,7 @@ class Elevator :
             self.requestlist.reverse()
             
     def __str__(self):
-        res = " id : " + self.idelevator + " \n direction : " +  self.direction + " \n requestlist : " + str(self.requestlist)  
+        res = " id : " + str(self.idelevator) + " \n direction : " +  self.direction + " \n requestlist : " + str(self.requestlist)  
     
     
     # mainElevator : open the door of the elevator  
