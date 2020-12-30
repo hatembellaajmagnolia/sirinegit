@@ -46,21 +46,21 @@ class Elevator :
    
     def move(self,floornumber):
         if self.currentfloor==floornumber:
-            print( strElevator   + self.idelevator + " STOPPED ") 
+            print( strElevator   + str(self.idelevator) + " STOPPED ") 
             self.status ='STOPPED'
         elif self.currentfloor < floornumber:  
-            print(strElevator  + self.idelevator + " MOVING UP ")
+            print(strElevator  + str(self.idelevator) + " MOVING UP ")
             self.status="MOVING UP"
         else:
-            print(strElevator  + self.idelevator + " MOVING DOWN ")
+            print(strElevator  + str(self.idelevator) + " MOVING DOWN ")
             self.status="MOVING DOWN"
-        print(strElevator  + self.idelevator + " STOPPED ") 
+        print(strElevator  + str(self.idelevator) + " STOPPED ") 
         self.status ='STOPPED'
         self.currentfloor= floornumber 
 
     # openDoor : open the door of the elevator  
     def opendoor(self):
-        print(strElevator  + self.idelevator + " OPEN DOOR ")   
+        print(strElevator  + str(self.idelevator) + " OPEN DOOR ")   
         self.setdoorstatus="OPEN"
      
 
@@ -69,8 +69,8 @@ class Elevator :
     def closedoor(self): 
         while (self.weight >= WeigthThreshold) or (self.numberofperson>= MaxCapacity) or (self.doorobstruction):
             self.opendoor()
-            print(strElevator + self.idelevator + " BIP SIGNAL ") 
-        print(strElevator + self.idelevator + " CLOSE DOOR ")               
+            print(strElevator + str(self.idelevator) + " BIP SIGNAL ") 
+        print(strElevator + str(self.idelevator) + " CLOSE DOOR ")               
         self.doorstatus="CLOSED"
     
 
