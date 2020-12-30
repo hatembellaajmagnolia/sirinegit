@@ -198,8 +198,8 @@ class elevatorcontroller:
 
 ec = elevatorcontroller(1,"ACTIVATED")
 ec.mainelevatorcontroller()
-ec.shafts[0].elevatorList[0].elevatorfloor = 10
-ec.shafts[0].elevatorList[1].elevatorfloor = 3
+ec.shafts[0].elevators[0].elevatorfloor = 10
+ec.shafts[0].elevators[1].elevatorfloor = 3
 ec.shafts[0].outsidebuttons[6].status = "ACTIVATED" #floor 3 to up activeted
 ec.shafts[0].outsidebuttons[2].status = "ACTIVATED" #floor 1 to up activeted
 ec.shafts[0].outsidebuttons[17].status = "ACTIVATED" #floor 9 to down activeted
