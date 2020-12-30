@@ -105,7 +105,7 @@ class Elevator :
     def mainelevator(self): 
         while  (not Emergency) and (len(self.requestlist)!=0) :
             for i in range (self.nbbutton):
-                if self.buttons[i].status=="activeted" and i not in self.requestlist:
+                if self.buttons[i].status=="ACTIVATED" and i not in self.requestlist:
                     self.requestlist.append (i)
             
             self.sortrequestlist()     #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
@@ -196,7 +196,12 @@ class elevatorcontroller:
         for shaft in self.shafts :
             shaft.mainshaft()
 
+print("********* CREATE ELEVATOR CONTROLLER  ************")
 ec = elevatorcontroller(1,"ACTIVATED")
+
+
+print("********* Run Main ELEVATOR CONTROLLER ************")
+
 ec.mainelevatorcontroller()
 
 print("********* SCENARIO 1 ************")
