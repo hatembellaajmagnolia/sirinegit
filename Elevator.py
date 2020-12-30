@@ -160,11 +160,11 @@ class shaft :
                         self.eligibleElevator.append(elevator)
         
         if len(self.eligiblelevator) > 1 :
-            return self.findnearestelevator(outsidebutton,self.eligiblelevator) 
+            return self.findnearestelevator(outsidebutton.currentfloor,self.eligiblelevator) 
         elif len(self.eligiblelevator) == 1 :
             return self.eligiblelevator[0]
         else:
-            return self.findnearestelevator(outsidebutton,self.elevators)
+            return self.findnearestelevator(outsidebutton.currentfloor,self.elevators)
    
     def findnearestelevator(self,currentfloor,elevatorslist):
         bestelevator = elevatorslist[0]     #lets take the first element of the array and compare it to each elevator1 of the array  
