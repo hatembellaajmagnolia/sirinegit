@@ -159,7 +159,7 @@ class shaft :
                 if((elevator.floor >= outsidebutton.currentfloor) and (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP")):
                         self.eligibleElevator.append(elevator)
         
-        if len(self.eligiblelevator) != 1 :
+        if len(self.eligiblelevator) > 1 :
             return self.findnearestelevator(outsidebutton,self.eligiblelevator) 
 
         return self.eligiblelevator[0]
