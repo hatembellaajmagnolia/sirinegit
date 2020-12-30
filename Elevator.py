@@ -108,7 +108,7 @@ class Elevator :
                     self.requestlist.append (i)
             
             self.sortrequestlist()     #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
-            print(str(self))
+            print(self)
             self.move(self.requestlist[0])    # requestlist[0] is the first floor which should be reached it can be 10, 7,....
             self.opendoor()
             self.removefromrequestlist(self.requestlist[0])
