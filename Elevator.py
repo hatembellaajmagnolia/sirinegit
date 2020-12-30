@@ -199,7 +199,7 @@ class elevatorcontroller:
 ec = elevatorcontroller(1,"ACTIVATED")
 ec.mainelevatorcontroller()
 
-Print("********* SCENARIO 1 ************")
+print("********* SCENARIO 1 ************")
 ec.shafts[0].elevators[0].elevatorfloor = 10
 ec.shafts[0].elevators[1].elevatorfloor = 3
 ec.shafts[0].outsidebuttons[6].status = "ACTIVATED" #floor 3 to up activeted
