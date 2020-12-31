@@ -3,7 +3,7 @@ let WeigthThreshold     = 500       //Measure Unit : KG / Max wight that elevato
 let MaxCapacity         =  10      //  Measure Unit : Person / Max person that elevator can contain
 let strElevator         = "Elevator: "  //constant for print
 //DEFINE GLOBAL PARAMETERS 
-var Emergency           =   False   //  If Emergency all elevators should be evacuated  
+var Emergency           =   false   //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
 class Elevator_Button{
@@ -45,7 +45,7 @@ class Elevator {
             console.log( strElevator   + this.idelevator + " STOPPED "); 
             this.status ='STOPPED';
         }
-        elif this.currentfloor < floornumber{  
+        else if this.currentfloor < floornumber{  
             console.log(strElevator  + this.idelevator + " MOVING UP ");
             this.status="MOVING UP";
         }
@@ -59,18 +59,19 @@ class Elevator {
     }
 
     // openDoor : open the door of the elevator  
-    opendoor():
+    opendoor()
+    {
         console.log(strElevator  + this.idelevator + " OPEN DOOR ") ;  
         this.setdoorstatus="OPEN";
-     
+    }
 
     
     // closeDoor : close the door of the elevator   
     closedoor()
     {
-        while (this.weight >= WeigthThreshold) or (this.numberofperson>= MaxCapacity) or (this.doorobstruction)
+        while (this.weight >= WeigthThreshold) || (this.numberofperson>= MaxCapacity) || (this.doorobstruction)
         {
-            this.opendoor()
+            this.opendoor();
             console.log(strElevator + this.idelevator + " BIP SIGNAL ") ;
         }
         console.log(strElevator + this.idelevator + " CLOSE DOOR ");               
@@ -185,9 +186,9 @@ class shaft {
                 if((elevator.floor >= outsidebutton.currentfloor) and (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP"))
                         self.eligibleElevator.push(elevator);
         }
-        if len(self.eligiblelevator) > 1 
+        if self.eligiblelevator.length > 1 
             return self.findnearestelevator(outsidebutton.currentfloor,self.eligiblelevator) ;
-        elif len(self.eligiblelevator) == 1 
+        else if self.eligiblelevator.length == 1 
             return self.eligiblelevator[0];
         else
             return self.findnearestelevator(outsidebutton.currentfloor,self.elevators);
