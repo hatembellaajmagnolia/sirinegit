@@ -11,18 +11,21 @@ class Elevator_Button{
         this.button=button;
         this.elevator=elevator;
         this.status=status;
- }
+    }
 
-// Getter and Setter
+    // Getter and Setter
     setstatus(status){
-
         this.status=status;
     }
     getstatus(){
         return this.statuts;
     }
-}doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton):
-    class Elevator {
+}
+
+
+
+/*
+class Elevator {
 
         constructor(idelevator, doorstatus, doorobstruction,numberofperson,weigth,status,currentfloor, direction,nbbutton) {
     
@@ -56,3 +59,4 @@ class Elevator_Button{
         
 
         
+*/
