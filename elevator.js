@@ -1,7 +1,7 @@
- 
-var WeigthThreshold     = 500       //Measure Unit : KG / Max wight that elevator can support 
-var MaxCapacity         =  10      //  Measure Unit : Person / Max person that elevator can contain
-var strElevator         = "Elevator: "  //constant for print
+// DEFINE CONSTANTS VALUES 
+let WeigthThreshold     = 500       //Measure Unit : KG / Max wight that elevator can support 
+let MaxCapacity         =  10      //  Measure Unit : Person / Max person that elevator can contain
+let strElevator         = "Elevator: "  //constant for print
 //DEFINE GLOBAL PARAMETERS 
 var Emergency           =   False   //  If Emergency all elevators should be evacuated  
 
