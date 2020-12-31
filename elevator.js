@@ -85,49 +85,58 @@ class Elevator {
     addtorequestlist (nbfloor)
     {
         if nbfloor  not in this.requestlist
-            this.requestlist.append(nbfloor);
+            this.requestlist.push(nbfloor);
     }
     
     # removeFromRequestList : remove floor from the request list 
     
-    def removefromrequestlist (nbfloor): 
-        this.requestlist.remove(nbfloor)
-    
+    removefromrequestlist (nbfloor)
+    {
+        this.requestlist.splice(nbfloor);
+    }
     # sortRequestList : sort the request list 
     
-    def  sortrequestlist():  
+    sortrequestlist()
+    {
         this.requestlist.sort()
-        if this.direction =="DOWN":
-            this.requestlist.reverse()
-            
-    def __str__():
-        res = " id : " + str(this.idelevator) + " \n direction : " +  this.direction + " \n requestlist : " + str(self.requestlist)  
-        return res
-    
+        if this.direction =="DOWN"
+            this.requestlist.reverse();
+    }        
+
+    __str__(){
+        res = " id : " + this.idelevator + " \n direction : " +  this.direction + " \n requestlist : " + self.requestlist ; 
+        return res ;
+    }
     
     # mainElevator : open the door of the elevator  
     # Manage request list 
     
      
-    def mainelevator(): 
-        while  (not Emergency) and (len(this.requestlist)!=0) :
-            for i in range (this.nbbutton):
-                if this.buttons[i].status=="ACTIVATED" and i not in this.requestlist:
-                    this.requestlist.append (i)
-            
-            this.sortrequestlist()     #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
-            print(this)
-            this.move(this.requestlist[0])    # requestlist[0] is the first floor which should be reached it can be 10, 7,....
-            this.opendoor()
-            this.removefromrequestlist(this.requestlist[0])
-            print(str(this))
+    mainelevator()
+    {
+        while  (not Emergency) and (len(this.requestlist)!=0) 
+        {
+            for i in range (this.nbbutton){
+                if this.buttons[i].status=="ACTIVATED" and i not in this.requestlist
+                    this.requestlist.push (i);
+            }
+            this.sortrequestlist() ;    #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            console.log(this.__str__());
+            this.move(this.requestlist[0])  ;  # requestlist[0] is the first floor which should be reached it can be 10, 7,....
+            this.opendoor();
+            this.removefromrequestlist(this.requestlist[0]);
+            console.log(this.__str__());
+        }
+    }
        
     # startElevator : The first time while the elevator start   
     # Manage request list 
      
-    def startelevator(floornumber):
-        this. move(floornumber) 
-        this. mainelevator()
+    startelevator(floornumber)
+    {
+        this. move(floornumber) ;
+        this. mainelevator();
+    }
 }
         
 
