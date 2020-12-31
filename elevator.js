@@ -1,9 +1,9 @@
 // DEFINE CONSTANTS VALUES 
-let WeigthThreshold     = 500       //Measure Unit : KG / Max wight that elevator can support 
-let MaxCapacity         =  10      //  Measure Unit : Person / Max person that elevator can contain
-let strElevator         = "Elevator: "  //constant for print
+let WeigthThreshold     = 500           ;    //Measure Unit : KG / Max wight that elevator can support 
+let MaxCapacity         =  10           ;    //  Measure Unit : Person / Max person that elevator can contain
+let strElevator         = "Elevator: "  ;    //constant for print
 //DEFINE GLOBAL PARAMETERS 
-var Emergency           =   false   //  If Emergency all elevators should be evacuated  
+var Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
 class Elevator_Button{
@@ -12,7 +12,6 @@ class Elevator_Button{
         this.elevator=elevator;
         this.status=status;
     }
-
     // Getter and Setter
     set status(status){
         this.status=status;
@@ -21,9 +20,6 @@ class Elevator_Button{
         return this.statuts;
     }
 }
-
-
-
 
 class Elevator {
     constructor (idelevator, direction, doorstatus, doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton)
@@ -41,7 +37,8 @@ class Elevator {
     // Methods declaration
     // move : move the elevator to reach specific floor
     move(floornumber){
-        if this.currentfloor==floornumber{
+        if this.currentfloor==floornumber
+        {
             console.log( strElevator   + this.idelevator + " STOPPED "); 
             this.status ='STOPPED';
         }
@@ -77,14 +74,10 @@ class Elevator {
         console.log(strElevator + this.idelevator + " CLOSE DOOR ");               
         this.doorstatus="CLOSED";
     }
-    
-
-
-  
     //addToRequestList : add floor to the request list 
     addtorequestlist (nbfloor)
     {
-        if nbfloor  not in this.requestlist
+        if !this.requestlist.includes(nbfloor)
             this.requestlist.push(nbfloor);
     }
     
@@ -98,40 +91,36 @@ class Elevator {
     
     sortrequestlist()
     {
-        this.requestlist.sort()
+        this.requestlist.sort();
         if this.direction =="DOWN"
             this.requestlist.reverse();
     }        
 
     __str__(){
-        res = " id : " + this.idelevator + " \n direction : " +  this.direction + " \n requestlist : " + self.requestlist ; 
+        var res = " id : " + this.idelevator + " \n direction : " +  this.direction + " \n requestlist : " + this.requestlist ; 
         return res ;
     }
-    
     // mainElevator : open the door of the elevator  
     // Manage request list 
-    
-     
     mainelevator()
     {
-        while  (not Emergency) and (len(this.requestlist)!=0) 
+        while  (!Emergency) && (this.requestlist.length !=0) 
         {
-            for i in range (this.nbbutton){
-                if this.buttons[i].status=="ACTIVATED" and i not in this.requestlist
+            for (i=0; i<this.nbbutton; i++)
+            {
+                if (this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i)
                     this.requestlist.push (i);
             }
-            this.sortrequestlist() ;    #sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            this.sortrequestlist() ;    //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
             console.log(this.__str__());
-            this.move(this.requestlist[0])  ;  # requestlist[0] is the first floor which should be reached it can be 10, 7,....
+            this.move(this.requestlist[0])  ;  // requestlist[0] is the first floor which should be reached it can be 10, 7,....
             this.opendoor();
             this.removefromrequestlist(this.requestlist[0]);
             console.log(this.__str__());
         }
     }
-       
     // startElevator : The first time while the elevator start   
     // Manage request list 
-     
     startelevator(floornumber)
     {
         this.move(floornumber) ;
