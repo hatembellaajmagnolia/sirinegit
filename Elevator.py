@@ -216,7 +216,7 @@ ec.shafts[0].mainshaft()
 
 
 
-#elevator = controller.RequestElevator(1, "up",1)
+
 #controller.RequestFloor(elevator, 6,1)
 #elevator = controller.RequestElevator(3, "up",1)
 #controller.RequestFloor(elevator, 5,1)
@@ -228,10 +228,6 @@ ec.shafts[0].mainshaft()
 
 #// // //------------- WORKINGGGG - -------------//// //
 
-#controller = elevatorcontroller(10, 2)
-
-#controller.column.elevatorList[0].elevator_floor = 10
-#controller.column.elevatorList[0].status = "moving"
 #controller.column.elevatorList[0].elevator_currentDirection = "down"
 #controller.column.elevatorList[1].elevator_floor = 3
 #controller.column.elevatorList[1].status = "moving"
