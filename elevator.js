@@ -37,12 +37,12 @@ class Elevator {
     // Methods declaration
     // move : move the elevator to reach specific floor
     move(floornumber){
-        if this.currentfloor==floornumber
+        if (this.currentfloor==floornumber)
         {
             console.log( strElevator   + this.idelevator + " STOPPED "); 
             this.status ='STOPPED';
         }
-        else if this.currentfloor < floornumber{  
+        else if (this.currentfloor < floornumber){  
             console.log(strElevator  + this.idelevator + " MOVING UP ");
             this.status="MOVING UP";
         }
@@ -66,7 +66,7 @@ class Elevator {
     // closeDoor : close the door of the elevator   
     closedoor()
     {
-        while (this.weight >= WeigthThreshold) || (this.numberofperson>= MaxCapacity) || (this.doorobstruction)
+        while ((this.weight >= WeigthThreshold) || (this.numberofperson>= MaxCapacity) || (this.doorobstruction))
         {
             this.opendoor();
             console.log(strElevator + this.idelevator + " BIP SIGNAL ") ;
@@ -77,7 +77,7 @@ class Elevator {
     //addToRequestList : add floor to the request list 
     addtorequestlist (nbfloor)
     {
-        if !this.requestlist.includes(nbfloor)
+        if (!this.requestlist.includes(nbfloor))
             this.requestlist.push(nbfloor);
     }
     
