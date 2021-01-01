@@ -92,7 +92,7 @@ class Elevator {
     sortrequestlist()
     {
         this.requestlist.sort();
-        if this.direction =="DOWN"
+        if (this.direction =="DOWN")
             this.requestlist.reverse();
     }        
 
