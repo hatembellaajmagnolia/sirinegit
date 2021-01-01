@@ -108,7 +108,7 @@ class Elevator {
         {
             for (i=0; i<this.nbbutton; i++)
             {
-                if ((this.buttons[i].status=="ACTIVATED") && (!this.requestlist.includes(i)))
+                if ((this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i))
                     this.requestlist.push (i);
             }
             this.sortrequestlist() ;    //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
@@ -153,41 +153,44 @@ class shaft {
         this.nbelevator=nbelevator;
         //add elevators to shaft
         this.elevators=[];
-        for (i=0; i<self.nbelevator; i++) 
-            this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor));
+        for (i in range(this.nbelevator))
+        { 
+            this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor);
+            
+        }
         // add outside buttons
         this.outsidebuttons=[];
         this.outsidebuttons.push(outsidebutton("UP",0,"DESACTIVATED"));
-        for (i=1;i<nbfloor-1;i++)
+        for (i in range(1,nbfloor-1))
         {
-            #instantiate button outside (up or down) Parameters : direction, floor, status
+            // instantiate button outside (up or down) Parameters : direction, floor, status
             this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
             this.outsidebuttons.push(outsidebutton("UP",i,"DESACTIVETED"));
         }
         this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
     }
-    findelevator(self,outsidebutton)
+    findelevator(this,outsidebutton)
     {
         this.eligiblelevator= [];
-        for  elevator in self.elevators
+        for  (elevator in this.elevators)
         {
-            if(elevator.status=="ACTIVETED")and(elevator.direction== outsidebutton.direction): ;
-                if((elevator.floor >= outsidebutton.currentfloor) and (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP"))
-                        self.eligibleElevator.push(elevator);
+            if(elevator.status=="ACTIVETED")(elevator.direction== outsidebutton.direction) ;
+                if((elevator.floor >= outsidebutton.currentfloor) (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP"))
+                        this.eligibleElevator.push(elevator);
         }
-        if self.eligiblelevator.length > 1 
-            return self.findnearestelevator(outsidebutton.currentfloor,self.eligiblelevator) ;
-        else if self.eligiblelevator.length == 1 
-            return self.eligiblelevator[0];
+        if (this.eligiblelevator.length > 1) 
+            return this.findnearestelevator(outsidebutton.currentfloor,this.eligiblelevator) ;
+        else if (this.eligiblelevator.length == 1) 
+            return this.eligiblelevator[0];
         else
-            return self.findnearestelevator(outsidebutton.currentfloor,self.elevators);
+            return this.findnearestelevator(outsidebutton.currentfloor,this.elevators);
     }
     findnearestelevator(currentfloor,elevatorslist)
     {
         bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
         bestgap = abs(bestelevator.currentfloor - currentfloor);
-        for elevator in elevatorslist: 
-            if abs(elevator.currentfloor - currentfloor <bestgap)
+        for (elevator in elevatorslist); 
+            if (abs(elevator.currentfloor - currentfloor <bestgap))
                 bestelevator = elevator ;
         return bestelevator ;
     }
@@ -195,15 +198,15 @@ class shaft {
     mainshaft()
     {
         this.status = "ACTIVE";
-        for outside in this.outsidebuttons
+        for (outside in this.outsidebuttons)
         {
-            if outside.status=="ACTIVATED"
+            if (outside.status=="ACTIVATED")
             {
                 e = this.findelevator(outside); //Get the elgible elevator to handle request 
                 e.addtorequestlist(outside.currentfloor); //add the floor to handle to the requestlist of the elevator
             }
         }
-        for elevator in this.elevators  
+        for (elevator in this.elevators)  
             elevator.mainelevator();
     }
 }            
@@ -215,13 +218,13 @@ class elevatorcontroller
     {
         this.status = status ; //'ACTIVE' OR 'STOPPED'
         this.shafts =[];
-        for i in range(nbshaft)
-            self.shafts.append(shaft(i,"ACTIVATED",2,10));
+        for (i in range(nbshaft))
+            this.shafts.append(shaft(i,"ACTIVATED",2,10));
     }
-    mainelevatorcontroller(self)
+    mainelevatorcontroller(this)
     {
-        self.status ="ACTIVATED";
-        for shaft in this.shafts 
+        this.status ="ACTIVATED";
+        for (shaft in this.shafts )
             shaft.mainshaft();
     }
 }
