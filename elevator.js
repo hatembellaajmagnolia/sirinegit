@@ -2,7 +2,7 @@
 let WeigthThreshold     = 500           ;    //Measure Unit : KG / Max wight that elevator can support 
 let MaxCapacity         =  10           ;    //  Measure Unit : Person / Max person that elevator can contain
 let strElevator         = "Elevator: "  ;    //constant for print
-//DEFINE GLOBAL PARAMETERS 
+var i                   =i
 var Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
@@ -104,7 +104,7 @@ class Elevator {
     // Manage request list 
     mainelevator()
     {
-        while  ((!Emergency) && (this.requestlist.length !=0)) 
+        while  (( Emergency=true) && (this.requestlist.length !=0)) 
         {
             for (i=0; i<this.nbbutton; i++)
             {
@@ -155,7 +155,7 @@ class shaft {
         this.elevators=[];
         for (i in range(this.nbelevator))
         { 
-            this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor);
+            this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor));
             
         }
         // add outside buttons
@@ -169,14 +169,14 @@ class shaft {
         }
         this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
     }
-    findelevator(this,outsidebutton)
+    findelevator()
     {
         this.eligiblelevator= [];
-        for  (elevator in this.elevators)
+        for  (var elevator in this.elevators)
         {
-            if(elevator.status=="ACTIVETED")(elevator.direction== outsidebutton.direction) ;
-                if((elevator.floor >= outsidebutton.currentfloor) (elevator.direction == "DOWN"))or ((elevator.floor <= outsidebutton.currentfloor) and (elevator.direction == "UP"))
-                        this.eligibleElevator.push(elevator);
+            if(elevator.status=="ACTIVETED")(elevator.direction== outsidebutton.direction) 
+            if((elevator.floor >= outsidebutton.currentfloor)&& (elevator.direction == "DOWN")) or ((elevator.floor <= outsidebutton.currentfloor) && (elevator.direction == "UP"))
+            this.eligibleElevator.push(elevator);
         }
         if (this.eligiblelevator.length > 1) 
             return this.findnearestelevator(outsidebutton.currentfloor,this.eligiblelevator) ;
@@ -187,9 +187,9 @@ class shaft {
     }
     findnearestelevator(currentfloor,elevatorslist)
     {
-        bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
-        bestgap = abs(bestelevator.currentfloor - currentfloor);
-        for (elevator in elevatorslist); 
+        var bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
+        var bestgap = abs(bestelevator.currentfloor - currentfloor);
+        for (var elevator in elevatorslist) 
             if (abs(elevator.currentfloor - currentfloor <bestgap))
                 bestelevator = elevator ;
         return bestelevator ;
@@ -198,15 +198,15 @@ class shaft {
     mainshaft()
     {
         this.status = "ACTIVE";
-        for (outside in this.outsidebuttons)
+        for (var outside in this.outsidebuttons)
         {
             if (outside.status=="ACTIVATED")
             {
-                e = this.findelevator(outside); //Get the elgible elevator to handle request 
+                var e = this.findelevator(outside); //Get the elgible elevator to handle request 
                 e.addtorequestlist(outside.currentfloor); //add the floor to handle to the requestlist of the elevator
             }
         }
-        for (elevator in this.elevators)  
+        for (var elevator in this.elevators)  
             elevator.mainelevator();
     }
 }            
@@ -229,7 +229,7 @@ class elevatorcontroller
     }
 }
 console.log("********* CREATE ELEVATOR CONTROLLER  ************");
-ec = new elevatorcontroller(1,"ACTIVATED");
+var ec = new elevatorcontroller(1,"ACTIVATED");
 
 
 console.log("********* Run Main ELEVATOR CONTROLLER ************");
