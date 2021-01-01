@@ -104,11 +104,11 @@ class Elevator {
     // Manage request list 
     mainelevator()
     {
-        while  (!Emergency) && (this.requestlist.length !=0) 
+        while  ((!Emergency) && (this.requestlist.length !=0)) 
         {
             for (i=0; i<this.nbbutton; i++)
             {
-                if (this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i)
+                if ((this.buttons[i].status=="ACTIVATED") && (!this.requestlist.includes(i)))
                     this.requestlist.push (i);
             }
             this.sortrequestlist() ;    //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
@@ -153,12 +153,12 @@ class shaft {
         this.nbelevator=nbelevator;
         //add elevators to shaft
         this.elevators=[];
-        for i in range(self.nbelevator) 
+        for (i=0; i<self.nbelevator; i++) 
             this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor));
         // add outside buttons
         this.outsidebuttons=[];
         this.outsidebuttons.push(outsidebutton("UP",0,"DESACTIVATED"));
-        for i in range(1,nbfloor-1)
+        for (i=1;i<nbfloor-1;i++)
         {
             #instantiate button outside (up or down) Parameters : direction, floor, status
             this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
