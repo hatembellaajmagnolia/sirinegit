@@ -22,6 +22,7 @@ class Elevator_Button{
 
 class Elevator {
     constructor (idelevator, direction, doorstatus, doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton)
+
     {
         this.elevator =idelevator;
         this.doorstatus = doorstatus;
@@ -32,6 +33,11 @@ class Elevator {
         this.currentfloor=currentfloor;
         this.direction = direction;
         this.nbbutton=nbbutton;
+        this.requestlist=[];
+        this.buttons=[];
+        for (var i=0;i<this.nbbutton.length;i++)
+            this.buttons[i].push(new ElevatorButton(i,idelevator,"DESACTIVATED"));
+        
     }
     // Methods declaration
     // move : move the elevator to reach specific floor
@@ -103,10 +109,9 @@ class Elevator {
     // Manage request list 
     mainelevator()
     {
-        console.log("test befor while");
+        console.log("requestlist="+ this.requestlist.length);
         while (this.requestlist.length !=0) 
         {
-            console.log("test after while");
             for (var i=0; i<this.nbbutton; i++)
             {
                 if ((this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i))
@@ -166,11 +171,15 @@ class shaft {
     findelevator()
     {
         this.eligiblelevator= [];
-        for  (var elevator in this.elevators)
+        for  (var i=0;i< this.elevators.length;i++)
         {
-            if(elevator.status=="ACTIVETED")(elevator.direction== outsidebutton.direction) 
-            if((elevator.floor >= outsidebutton.currentfloor)&& (elevator.direction == "DOWN")) or ((elevator.floor <= outsidebutton.currentfloor) && (elevator.direction == "UP"))
-            this.eligibleElevator.push(elevator);
+            if((this.elevators[i].status=="ACTIVETED")&&(this.elevators[i].direction== outsidebutton.direction))
+            {
+                if((this.elevators[i].floor >= outsidebutton.currentfloor)&& (this.elevators[i].direction == "DOWN")) or ((this.elevators[i].floor <= outsidebutton.currentfloor) && (this.elevators[i].direction == "UP"))
+                {
+                    this.eligibleElevator.push(this.elevators[i]);
+                }
+            }
         }
         if (this.eligiblelevator.length > 1) 
             return this.findnearestelevator(outsidebutton.currentfloor,this.eligiblelevator) ;
@@ -182,29 +191,26 @@ class shaft {
     findnearestelevator(currentfloor,elevatorslist)
     {
         var bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
-        var bestgap = abs(bestelevator.currentfloor - currentfloor);
-        for (var elevator in elevatorslist) 
-            if (abs(elevator.currentfloor - currentfloor <bestgap))
-                bestelevator = elevator ;
+        var bestgap = Math.abs(bestelevator.currentfloor - currentfloor);
+        for (var i=0;i<elevatorslist.length;i++) 
+            if (Math.abs(elevatorslist[i].currentfloor - currentfloor <bestgap))
+                bestelevator = elevatorslist[i] ;
         return bestelevator ;
     }
 
     mainshaft()
     {
         this.status = "ACTIVE";
-        console.log(" main shaft:test befor for");
-        for (var outside in this.outsidebuttons)
+        for (var i=0;i<this.outsidebuttons.length;i++)
         {
-            console.log(" main shaft:test after for");
-            if (outside.status=="ACTIVATED")
+            if (this.outsidebuttons[i].status=="ACTIVATED")
             {
-                console.log(" main shaft:test in if");
-                var e = findelevator(outside); //Get the elgible elevator to handle request 
-                e.addtorequestlist(outside.currentfloor); //add the floor to handle to the requestlist of the elevator
+                var e = this.findelevator(this.outsidebuttons[i]); //Get the elgible elevator to handle request 
+                e.addtorequestlist(this.outsidebuttons[i].currentfloor); //add the floor to handle to the requestlist of the elevator
             }
         }
-        for (var elevator in this.elevators)  
-            elevator.mainelevator();
+        for (i=0;i<this.elevators.length;i++)  
+            this.elevators[i].mainelevator();
         
     }
 }            
@@ -222,8 +228,8 @@ class elevatorcontroller
     mainelevatorcontroller()
     {
         this.status ="ACTIVATED";
-        for (shaft in this.shafts)
-            shaft.mainshaft();
+        for (var i=0;i<this.shafts.length;i++)
+            this.shafts[i].mainshaft();
     }
 }
 console.log("********* CREATE ELEVATOR CONTROLLER  ************");
@@ -240,7 +246,7 @@ ec.shafts[0].elevators[1].elevatorfloor = 3;
 ec.shafts[0].outsidebuttons[6].status = "ACTIVATED"; //floor 3 to up activeted
 ec.shafts[0].outsidebuttons[2].status = "ACTIVATED" ; //floor 1 to up activeted
 ec.shafts[0].outsidebuttons[17].status = "ACTIVATED" ; //floor 9 to down activeted
-ec.shafts[0].mainshaft ;
+ec.shafts[0].mainshaft() ;
         
 
         
