@@ -2,7 +2,6 @@
 let WeigthThreshold     = 500           ;    //Measure Unit : KG / Max wight that elevator can support 
 let MaxCapacity         =  10           ;    //  Measure Unit : Person / Max person that elevator can contain
 let strElevator         = "Elevator: "  ;    //constant for print
-var i                   =i
 var Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
@@ -106,7 +105,7 @@ class Elevator {
     {
         while  (( Emergency=true) && (this.requestlist.length !=0)) 
         {
-            for (i=0; i<this.nbbutton; i++)
+            for (var i=0; i<this.nbbutton; i++)
             {
                 if ((this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i))
                     this.requestlist.push (i);
@@ -136,13 +135,6 @@ class outsidebutton {
         this.currentfloor = currentfloor;
         this.status = status;
     }
-    // Getter and Setter
-    set status(status){
-        this.status=status;
-    }
-    get status(){
-        return this.statuts;
-    }
 }
 // Shaft class
 class shaft {
@@ -153,21 +145,21 @@ class shaft {
         this.nbelevator=nbelevator;
         //add elevators to shaft
         this.elevators=[];
-        for (i in range(this.nbelevator))
+        for (var i=0;i<nbelevator;i++ )
         { 
-            this.elevators.push(Elevator(i,"NULL","CLOSED",False,0,0,"ACTIVATED",0,nbfloor));
+            this.elevators.push(new Elevator(i,"NULL","CLOSED",false,0,0,"ACTIVATED",0,nbfloor));
             
         }
         // add outside buttons
         this.outsidebuttons=[];
-        this.outsidebuttons.push(outsidebutton("UP",0,"DESACTIVATED"));
-        for (i in range(1,nbfloor-1))
+        this.outsidebuttons.push(new outsidebutton("UP",0,"DESACTIVATED"));
+        for ( i =1;i<nbfloor-1;i++)
         {
             // instantiate button outside (up or down) Parameters : direction, floor, status
-            this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
-            this.outsidebuttons.push(outsidebutton("UP",i,"DESACTIVETED"));
+            this.outsidebuttons.push(new outsidebutton("DOWN",i,"DESACTIVETED"));
+            this.outsidebuttons.push(new outsidebutton("UP",i,"DESACTIVETED"));
         }
-        this.outsidebuttons.push(outsidebutton("DOWN",i,"DESACTIVETED"));
+        this.outsidebuttons.push(new outsidebutton("DOWN",i,"DESACTIVETED"));
     }
     findelevator()
     {
@@ -208,6 +200,7 @@ class shaft {
         }
         for (var elevator in this.elevators)  
             elevator.mainelevator();
+        return 0;
     }
 }            
 
@@ -218,10 +211,10 @@ class elevatorcontroller
     {
         this.status = status ; //'ACTIVE' OR 'STOPPED'
         this.shafts =[];
-        for (i in range(nbshaft))
-            this.shafts.append(shaft(i,"ACTIVATED",2,10));
+        for (var i=0 ;i<nbshaft;i++)
+            this.shafts.push(new shaft(i,"ACTIVATED",2,10));
     }
-    mainelevatorcontroller(this)
+    mainelevatorcontroller()
     {
         this.status ="ACTIVATED";
         for (shaft in this.shafts )
