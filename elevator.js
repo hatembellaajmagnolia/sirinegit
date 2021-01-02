@@ -2,7 +2,7 @@
 let WeigthThreshold     = 500           ;    //Measure Unit : KG / Max wight that elevator can support 
 let MaxCapacity         =  10           ;    //  Measure Unit : Person / Max person that elevator can contain
 let strElevator         = "Elevator: "  ;    //constant for print
-var Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
+let Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
 class Elevator_Button{
@@ -103,8 +103,10 @@ class Elevator {
     // Manage request list 
     mainelevator()
     {
-        while  (( Emergency=true) && (this.requestlist.length !=0)) 
+        console.log("test befor while");
+        while (this.requestlist.length !=0) 
         {
+            console.log("test after while");
             for (var i=0; i<this.nbbutton; i++)
             {
                 if ((this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i))
@@ -190,10 +192,13 @@ class shaft {
     mainshaft()
     {
         this.status = "ACTIVE";
+        console.log(" main shaft:test befor for");
         for (var outside in this.outsidebuttons)
         {
+            console.log(" main shaft:test after for");
             if (outside.status=="ACTIVATED")
             {
+                console.log(" main shaft:test in if");
                 var e = this.findelevator(outside); //Get the elgible elevator to handle request 
                 e.addtorequestlist(outside.currentfloor); //add the floor to handle to the requestlist of the elevator
             }
@@ -217,7 +222,8 @@ class elevatorcontroller
     mainelevatorcontroller()
     {
         this.status ="ACTIVATED";
-        for (shaft in this.shafts )
+        console.log(" main elevator:test befor for");
+        for (shaft in this.shafts)
             shaft.mainshaft;
     }
 }
