@@ -199,12 +199,12 @@ class shaft {
             if (outside.status=="ACTIVATED")
             {
                 console.log(" main shaft:test in if");
-                var e = this.findelevator(outside); //Get the elgible elevator to handle request 
+                var e = findelevator(outside); //Get the elgible elevator to handle request 
                 e.addtorequestlist(outside.currentfloor); //add the floor to handle to the requestlist of the elevator
             }
         }
         for (var elevator in this.elevators)  
-            elevator.mainelevator;
+            elevator.mainelevator();
         
     }
 }            
@@ -222,9 +222,8 @@ class elevatorcontroller
     mainelevatorcontroller()
     {
         this.status ="ACTIVATED";
-        console.log(" main elevator:test befor for");
         for (shaft in this.shafts)
-            shaft.mainshaft;
+            shaft.mainshaft();
     }
 }
 console.log("********* CREATE ELEVATOR CONTROLLER  ************");
@@ -233,7 +232,7 @@ var ec = new elevatorcontroller(1,"ACTIVATED");
 
 console.log("********* Run Main ELEVATOR CONTROLLER ************");
 
-ec.mainelevatorcontroller;
+ec.mainelevatorcontroller();
 
 console.log("********* SCENARIO 1 ************");
 ec.shafts[0].elevators[0].elevatorfloor = 10;
