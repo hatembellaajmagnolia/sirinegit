@@ -16,14 +16,14 @@ class Elevator {
     constructor (idelevator, direction, doorstatus, doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton)
 
     {
-        this.elevator =idelevator;
+        this.idelevator =idelevator;
+        this.direction = direction;
         this.doorstatus = doorstatus;
         this.doorobstruction=doorobstruction;
         this.doorobstruction=numberofperson;
         this.weigth = weigth;
         this.status=status;
         this.currentfloor=currentfloor;
-        this.direction = direction;
         this.nbbutton=nbbutton;
         this.requestlist=[];
         this.buttons=[];
