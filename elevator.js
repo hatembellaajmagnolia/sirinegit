@@ -5,21 +5,13 @@ let strElevator         = "Elevator: "  ;    //constant for print
 let Emergency           =   false       ;    //  If Emergency all elevators should be evacuated  
 
 //Class that describes button inside the elevator //
-class Elevator_Button{
+class ElevatorButton{
     constructor(elevator,button,status){
         this.button=button;
         this.elevator=elevator;
         this.status=status;
     }
-    // Getter and Setter
-    set status(status){
-        this.status=status;
-    }
-    get status(){
-        return this.statuts;
-    }
 }
-
 class Elevator {
     constructor (idelevator, direction, doorstatus, doorobstruction,numberofperson,weigth,status,currentfloor,nbbutton)
 
@@ -35,8 +27,8 @@ class Elevator {
         this.nbbutton=nbbutton;
         this.requestlist=[];
         this.buttons=[];
-        for (var i=0;i<this.nbbutton.length;i++)
-            this.buttons[i].push(new ElevatorButton(i,idelevator,"DESACTIVATED"));
+        for (var i=0;i<this.nbbutton;i++)
+            this.buttons.push(new ElevatorButton(i,idelevator,"DESACTIVATED"));
         
     }
     // Methods declaration
