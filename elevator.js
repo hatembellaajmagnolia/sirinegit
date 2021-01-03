@@ -42,10 +42,12 @@ class Elevator {
         else if (this.currentfloor < floornumber){  
             console.log(strElevator  + this.idelevator + " MOVING UP ");
             this.status="MOVING UP";
+            this.direction="UP";
         }
         else{
              console.log(strElevator  + this.idelevator + " MOVING DOWN ");
             this.status="MOVING DOWN";
+            this.direction="DOWN";
         }
         console.log(strElevator  + this.idelevator + " STOPPED ") ;
         this.status ='STOPPED';
@@ -110,6 +112,11 @@ class Elevator {
                     this.requestlist.push (i);
             }
             this.sortrequestlist() ;    //sort should be done every time before treating first request : in cas of adding another floor while we treat the last request 
+            if (this.requestlist[0]>this.currentfloor)
+                this.direction="UP";
+            else if (this.requestlist[0]<this.currentfloor)
+                this.direction="DOWN";
+
             console.log(this.__str__());
             this.move(this.requestlist[0])  ;  // requestlist[0] is the first floor which should be reached it can be 10, 7,....
             this.opendoor();
