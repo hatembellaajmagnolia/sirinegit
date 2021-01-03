@@ -80,9 +80,9 @@ class Elevator {
     
     // removeFromRequestList : remove floor from the request list 
     
-    removefromrequestlist (nbfloor)
+    removefromrequestlist()
     {
-        this.requestlist.splice(nbfloor);
+        this.requestlist.shift();
     }
     // sortRequestList : sort the request list 
     
@@ -113,7 +113,7 @@ class Elevator {
             console.log(this.__str__());
             this.move(this.requestlist[0])  ;  // requestlist[0] is the first floor which should be reached it can be 10, 7,....
             this.opendoor();
-            this.removefromrequestlist(this.requestlist[0]);
+            this.removefromrequestlist();
             console.log(this.__str__());
         }
     }
