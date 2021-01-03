@@ -102,8 +102,8 @@ class Elevator {
     mainelevator()
     {
         console.log("requestlist="+ this.requestlist.length);
-        // while (this.requestlist.length !=0) 
-        // {
+        while (this.requestlist !=0) 
+         {
             for (var i=0; i<this.nbbutton; i++)
             {
                 if ((this.buttons[i].status=="ACTIVATED") && !this.requestlist.includes(i))
@@ -115,7 +115,7 @@ class Elevator {
             this.opendoor();
             this.removefromrequestlist();
             console.log(this.__str__());
-        // }
+         }
     }
     // startElevator : The first time while the elevator start   
     // Manage request list 
