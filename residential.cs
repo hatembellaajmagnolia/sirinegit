@@ -12,6 +12,21 @@ public  class Program {
     public static void main(string[] args)
     {    
         bool Emergency = false;
+console.WriteLine("********* CREATE ELEVATOR CONTROLLER  ************");
+elevatorcontroller ec = new elevatorcontroller(1,"ACTIVATED");
+
+
+console.WriteLine("********* Run Main ELEVATOR CONTROLLER ************");
+
+ec.mainelevatorcontroller();
+
+console.WriteLine("********* SCENARIO 1 ************");
+ec.shafts[0].elevators[0].elevatorfloor = 10;
+ec.shafts[0].elevators[1].elevatorfloor = 3;
+ec.shafts[0].outsidebuttons[6].status = "ACTIVATED"; //floor 3 to up activeted
+ec.shafts[0].outsidebuttons[2].status = "ACTIVATED" ; //floor 1 to up activeted
+ec.shafts[0].outsidebuttons[17].status = "ACTIVATED" ; //floor 9 to down activeted
+ec.shafts[0].mainshaft() ;
     }
 }
         
@@ -173,10 +188,10 @@ public class Elevator
 // outsidebutton class
 public class outsidebutton {
     public string direction;
-    public string currentfloor;
+    public int currentfloor;
     public string status;
     //Properties declaration
-    public outsidebutton(string direction,string currentfloor,sting status)
+    public outsidebutton(string direction,int currentfloor,sting status)
     {
         this.direction = direction;
         this.currentfloor = currentfloor;
@@ -202,7 +217,7 @@ public class shaft {
             
         }
         // add outside buttons
-         public List<outsidebutton> buttons=new List<outsidebutton>()
+         public List <outsidebutton> buttons=new List<outsidebutton>()
         this.outsidebuttons.Add(new outsidebutton("UP",0,"DESACTIVATED"));
         for ( i =1;i<nbfloor-1;i++)
         {
@@ -214,8 +229,8 @@ public class shaft {
     }
     public void findelevator()
     {
-        this.eligiblelevator= [];
-        for  (var i=0;i< this.elevators.Count;i++)
+        public List<Elevator> eligibleElevator=new List<Elevator>();
+        for  (int i=0;i< this.elevators.Count;i++)
         {
             if((this.elevators[i].status=="ACTIVETED")&&(this.elevators[i].direction== outsidebutton.direction))
             {
@@ -234,9 +249,9 @@ public class shaft {
     }
     public void findnearestelevator(string currentfloor,int elevatorslist)
     {
-        var bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
-        var bestgap = Math.abs(bestelevator.currentfloor - currentfloor);
-        for (var i=0;i<elevatorslist.Count;i++) 
+        Elevator bestelevator = elevatorslist[0] ;    //lets take the first element of the array and compare it to each elevator1 of the array  
+        int bestgap = Math.abs(bestelevator.currentfloor - currentfloor);
+        for (int i=0;i<elevatorslist.Count;i++) 
             if (Math.abs(elevatorslist[i].currentfloor - currentfloor <bestgap))
                 bestelevator = elevatorslist[i] ;
         return bestelevator ;
@@ -245,11 +260,11 @@ public class shaft {
     public void mainshaft()
     {
         this.status = "ACTIVE";
-        for (var i=0;i<this.outsidebuttons.Count;i++)
+        for (int i=0;i<this.outsidebuttons.Count;i++)
         {
             if (this.outsidebuttons[i].status=="ACTIVATED")
             {
-                var e = this.findelevator(this.outsidebuttons[i]); //Get the elgible elevator to handle request 
+                Elevator e = this.findelevator(this.outsidebuttons[i]); //Get the elgible elevator to handle request 
                 e.addtorequestlist(this.outsidebuttons[i].currentfloor); //add the floor to handle to the requestlist of the elevator
             }
         }
@@ -267,34 +282,17 @@ public class elevatorcontroller
     public elevatorcontroller(int nbshaft,string status)
     {
         this.status = status ; //'ACTIVE' OR 'STOPPED'
-         public List<shaft> nbshaft=new List<shaft>()
-        for (var i=0 ;i<nbshaft;i++)
+        List<shaft> nbshaft=new List<shaft>();
+        for (int  i=0 ;i<nbshaft;i++)
             this.shafts.Add(new shaft(i,"ACTIVATED",2,10));
     }
     public void mainelevatorcontroller()
     {
         this.status ="ACTIVATED";
-        for (var i=0;i<this.shafts.Count;i++)
+        for (int i=0;i<this.shafts.Count;i++)
             this.shafts[i].mainshaft();
     }
 }
-console.WriteLine("********* CREATE ELEVATOR CONTROLLER  ************");
-var ec = new elevatorcontroller(1,"ACTIVATED");
 
-
-console.WriteLine("********* Run Main ELEVATOR CONTROLLER ************");
-
-ec.mainelevatorcontroller();
-
-console.WriteLine("********* SCENARIO 1 ************");
-ec.shafts[0].elevators[0].elevatorfloor = 10;
-ec.shafts[0].elevators[1].elevatorfloor = 3;
-ec.shafts[0].outsidebuttons[6].status = "ACTIVATED"; //floor 3 to up activeted
-ec.shafts[0].outsidebuttons[2].status = "ACTIVATED" ; //floor 1 to up activeted
-ec.shafts[0].outsidebuttons[17].status = "ACTIVATED" ; //floor 9 to down activeted
-ec.shafts[0].mainshaft() ;
-        {
-           
-        }
 		
         
