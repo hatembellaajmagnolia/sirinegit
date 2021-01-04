@@ -11,6 +11,25 @@ namespace Namespace {
         const var Emergency = false;
         
 
+##### Class that describes button inside the elevator ####
 
+# Elevator_Button class
+public class ElevatorButton
+{
+# Properties declaration in constructor
+    public ElevatorButton(int idbutton,int idelevator,int status)
+    {
+        idbutton=idbutton;
+        idelevator=idelevator;
+        status=status;
+    }
+# Getter and Setter
+    public setstatus(int status){
+        status=status;
+    }
+    public getstatus{
+        return statuts
+    }
+}
 		
         
