@@ -104,7 +104,7 @@ class Elevator {
     mainelevator()
     {
         console.log("requestlist="+ this.requestlist.length);
-        while (this.requestlist !=0) 
+        while (this.requestlist.length !=0) 
          {
             for (var i=0; i<this.nbbutton; i++)
             {
