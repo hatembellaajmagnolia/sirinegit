@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-//    define constants
-const int WeigthThreshold = 500;
-const int  MaxCapacity = 10;
-const string  strElevator = "Elevator: ";
+
+
+
+
  
 // main program
 public  class Program {
@@ -44,16 +44,19 @@ public class ElevatorButton
         status=status;
     }
 //  Getter and Setter
-    public setstatus(int status){
+    public void setstatus(int status){
         status=status;
     }
-    public getstatus{
+    public string getstatus(){
         return statuts
     }
 }
 // elevator class
 public class Elevator
 {
+    const int WeigthThreshold = 500;
+    const int  MaxCapacity = 10;
+    const string  strElevator = "Elevator: ";
     // properties defination
     public int idelevator;
     public string status;
@@ -293,6 +296,3 @@ public class elevatorcontroller
             this.shafts[i].mainshaft();
     }
 }
-
-		
-        
